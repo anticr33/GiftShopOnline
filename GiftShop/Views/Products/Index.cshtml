@@ -1,0 +1,15 @@
+﻿@model IEnumerable<GiftShop.Models.Product>
+
+<h2>Продукти</h2>
+
+<ul>
+    @foreach (var product in Model)
+    {
+        <li>
+            <h3>@product.Name</h3>
+            <p>@product.Description</p>
+            <p>Цена: @product.Price лв.</p>
+            <img src="@product.ImageUrl" alt="@product.Name" style="width: 150px;" />
+        </li>
+    }
+</ul>
