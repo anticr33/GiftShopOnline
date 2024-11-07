@@ -1,19 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using GiftShop.Models;
-using System.Collections.Generic;
+﻿using GiftShop.Models;
+using Microsoft.AspNetCore.Mvc;
 
-namespace GiftShop.Controllers
+public class ProductsController : Controller
 {
-    public class ProductsController : Controller
+    public IActionResult Details(int id)
     {
-        public IActionResult Index()
+        var products = new List<Product>
         {
-            var products = new List<Product>
-            {
-                new Product { Id = 1, Name = "Подаръчна чаша", Description = "Красива чаша за кафе.", Price = 12.99m, ImageUrl = "/images/cup.jpg" },
-                new Product { Id = 2, Name = "Ключодържател", Description = "Стилен ключодържател.", Price = 5.50m, ImageUrl = "/images/keychain.jpg" }
-            };
-            return View(products);
+            new Product { Id = 1, Name = "Комплект мъжки часовник от PU кожа", Description = "Луксозен комплект с часовник, слънчеви очила и портфейл, подходящ за стилни мъже.", Price = 50m, ImageUrl = "/images/menbox.png" },
+            new Product { Id = 2, Name = "Комплект гарафа за уиски", Description = "Елегантна гарафа за уиски с две чаши, идеален подарък за любителите на уиски.", Price = 80m, ImageUrl = "/images/wesky.png" },
+            new Product { Id = 3, Name = "Китарен винилов стенен часовник", Description = "Часовник с форма на китара.", Price = 60m, ImageUrl = "/images/gitar.png" }
+        };
+
+        var product = products.FirstOrDefault(p => p.Id == id);
+        if (product == null)
+        {
+            return NotFound();
         }
+
+        return View("ProductDetails", product);
     }
 }

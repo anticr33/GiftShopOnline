@@ -1,0 +1,24 @@
+﻿@model GiftShop.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Name">
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.Name</h2>
+            <p><strong>Цена:</strong> @Model.Price лв</p>
+            <p>@Model.Description</p>
+            <div class="my-4">
+                <label>Количество:</label>
+                <input type="number" class="form-control" value="1" min="1">
+            </div>
+            <button class="btn btn-dark btn-lg mb-2">Добави в количката</button>
+            <button class="btn btn-outline-dark btn-lg">Купи сега</button>
+        </div>
+    </div>
+</div>

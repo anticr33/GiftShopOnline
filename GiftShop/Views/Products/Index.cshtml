@@ -10,6 +10,9 @@
             <p>@product.Description</p>
             <p>Цена: @product.Price лв.</p>
             <img src="@product.ImageUrl" alt="@product.Name" style="width: 150px;" />
+            <br />
+            <!-- Линк към детайлите за продукта -->
+            <a href="/Products/Details/@product.Id" class="btn btn-primary">Виж детайли</a>
         </li>
     }
 </ul>
