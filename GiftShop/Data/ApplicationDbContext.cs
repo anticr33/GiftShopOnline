@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using GiftShop.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GiftShop.Data
@@ -9,5 +10,9 @@ namespace GiftShop.Data
             : base(options)
         {
         }
+
+        public DbSet<Product> Products { get; set; }
+
     }
+
 }
