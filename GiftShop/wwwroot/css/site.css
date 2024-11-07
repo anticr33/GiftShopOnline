@@ -24,3 +24,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.card-img-top {
+    height: 380px; /* Регулирайте височината според нуждите */
+    object-fit: cover; /* Запазва пропорциите и изрязва, ако е необходимо */
+}
