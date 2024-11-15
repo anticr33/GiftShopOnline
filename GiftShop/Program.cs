@@ -40,7 +40,7 @@ namespace GiftShop
             app.UseRouting();
 
             app.UseAuthorization();
-            // Добавете този маршрут за Products/Details
+            // Добавете този  маршрут за Products/Details
             app.MapControllerRoute(
                name: "productDetails",
                pattern: "Products/Details/{id?}",
