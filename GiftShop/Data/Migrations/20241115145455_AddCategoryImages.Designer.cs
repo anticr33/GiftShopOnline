@@ -4,6 +4,7 @@ using GiftShop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GiftShop.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115145455_AddCategoryImages")]
+    partial class AddCategoryImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,50 +48,6 @@ namespace GiftShop.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Смели подаръци за мъже",
-                            ImageUrl = "/images/ForHim1.png",
-                            Name = "За Него"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Прекрасни подаръци за жени",
-                            ImageUrl = "/images/ForHer.png",
-                            Name = "За Нея"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Играчки и забавления за най-малките",
-                            ImageUrl = "/images/ForKids.png",
-                            Name = "За Деца"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Подаръци за уют и декорация на дома",
-                            ImageUrl = "/images/ForHome.png",
-                            Name = "За Дома"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Description = "Уникални персонализирани подаръци",
-                            ImageUrl = "/images/personalized.png",
-                            Name = "Персонализирани"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Description = "Подаръци за всякакви хобита и интереси",
-                            ImageUrl = "/images/hobies.png",
-                            Name = "Хобита"
-                        });
                 });
 
             modelBuilder.Entity("GiftShop.Models.Product", b =>

@@ -1,0 +1,19 @@
+﻿@model GiftShop.Models.Category
+
+<h2>@Model.Name</h2>
+<p>@Model.Description</p>
+
+<div>
+    <img src="@Model.ImageUrl" alt="@Model.Name" />
+</div>
+
+<h3>Продукти в тази категория:</h3>
+<ul>
+    @foreach (var product in Model.Products)
+    {
+        <li>
+            <strong>@product.Name</strong> - @product.Price лв.
+            <p>@product.Description</p>
+        </li>
+    }
+</ul>
