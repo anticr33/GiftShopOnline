@@ -1,19 +1,25 @@
 ﻿@model GiftShop.Models.Category
 
 <h2>@Model.Name</h2>
-<p>@Model.Description</p>
 
-<div>
-    <img src="@Model.ImageUrl" alt="@Model.Name" />
-</div>
 
-<h3>Продукти в тази категория:</h3>
+
 <ul>
-    @foreach (var product in Model.Products)
-    {
-        <li>
-            <strong>@product.Name</strong> - @product.Price лв.
-            <p>@product.Description</p>
-        </li>
-    }
-</ul>
+    <div class="row">
+        @foreach (var product in Model.Products)
+        {
+            <div class="col-md-3">
+                <div class="card">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                    <div class="card-body text-center">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Description</p>
+                        <p class="card-text">
+                            <strong>@string.Format("{0:C}", product.Price)</strong>
+                        </p>
+                        <a href="/Buy/Product/@product.Id" class="btn btn-primary">Купи сега</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>

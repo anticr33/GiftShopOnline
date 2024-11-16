@@ -49,6 +49,21 @@ namespace GiftShop.Controllers
 
             return View("Category", category);
         }
+        public IActionResult BuyProduct(int id)
+        {
+            // Тук можете да добавите логика за обработка на покупката.
+            // Например, зареждане на продукта от базата данни:
+            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // Прехвърляне към страница за потвърждение или кошница
+            return View(product);
+        }
+
 
     }
 }
