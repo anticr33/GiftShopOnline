@@ -10,6 +10,7 @@
 
         public int CategoryId { get; set; } // Външен ключ към категория
         public Category Category { get; set; } // Навигационно свойство
+        public string Occasion { get; set; } // Нова колона за повода
 
     }
 }

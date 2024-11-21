@@ -1,0 +1,19 @@
+﻿@model GiftShop.Models.QuestionnaireViewModel
+
+<h2>Въпросник</h2>
+
+<form asp-action="Recommendations" method="post">
+    @for (int i = 0; i < Model.Questions.Count; i++)
+    {
+        <div>
+            <label>@Model.Questions[i]</label>
+            <select name="SelectedAnswers[@i]" class="form-control">
+                @foreach (var option in Model.Options[i])
+                {
+                    <option value="@option">@option</option>
+                }
+            </select>
+        </div>
+    }
+    <button type="submit" class="btn btn-primary">Виж препоръки</button>
+</form>
