@@ -29,3 +29,42 @@ body {
     height: 380px; /* Регулирайте височината според нуждите */
     object-fit: cover; /* Запазва пропорциите и изрязва, ако е необходимо */
 }
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #4a90e2;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #357ab7;
+    }
+
+.divider {
+    text-align: center;
+    position: relative;
+    color: #888;
+    margin: 1.5rem 0;
+}
+
+    .divider::before,
+    .divider::after {
+        content: '';
+        height: 1px;
+        width: 40%;
+        background: #ddd;
+        position: absolute;
+        top: 50%;
+    }
+
+    .divider::before {
+        left: 0;
+    }
+
+    .divider::after {
+        right: 0;
+    }

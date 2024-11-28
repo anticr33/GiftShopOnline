@@ -1,0 +1,41 @@
+﻿@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow" style="width: 400px; border-radius: 15px;">
+        <div class="card-body text-center">
+            <h3 class="card-title mb-4 text-primary">Вход</h3>
+            <p class="text-muted">Здравейте, Добре дошли обратно 👋</p>
+            <button class="btn btn-outline-secondary w-100 mb-3">Вход с Google</button>
+            <div class="divider my-3">или Вход с имейл</div>
+            <form method="post">
+                <div class="form-group text-left">
+                    <label for="email">Имейл</label>
+                    <input id="email" asp-for="Input.Email" class="form-control" placeholder="Пример: ivan@abv.bg" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group text-left mt-3">
+                    <label for="password">Парола</label>
+                    <input id="password" asp-for="Input.Password" type="password" class="form-control" placeholder="Въведете вашата парола" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3 text-left">
+                    <input asp-for="Input.RememberMe" type="checkbox" />
+                    <label asp-for="Input.RememberMe">Запомни ме</label>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <a asp-page="/Account/ForgotPassword" class="text-secondary">Забравена парола?</a>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-4">Вход</button>
+                <p class="text-center mt-3">Нямате профил? <a asp-page="/Account/Register" class="text-primary">Създайте акаунт</a></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
