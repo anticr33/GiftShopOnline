@@ -6,7 +6,7 @@ namespace GiftShop
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +32,12 @@ namespace GiftShop
             // Добавяне на MVC и Razor Pages
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
+            var app = builder.Build(); 
+            var scope = app.Services.CreateScope();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            await SeedRolesAsync(roleManager);
+
+
 
             // Конфигурация на HTTP заявките
             if (app.Environment.IsDevelopment())
@@ -68,5 +73,23 @@ namespace GiftShop
 
             app.Run(); // Стартиране на приложението
         }
+        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
+        {
+            if (!await roleManager.RoleExistsAsync("Admin"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+        }
+        public static async Task SeedAdminUserAsync(UserManager<IdentityUser> userManager)
+        {
+            var adminUser = await userManager.FindByEmailAsync("admin@example.com");
+            if (adminUser == null)
+            {
+                var newUser = new IdentityUser { UserName = "admin@example.com", Email = "admin@example.com" };
+                await userManager.CreateAsync(newUser, "Admin123!");
+                await userManager.AddToRoleAsync(newUser, "Admin");
+            }
+        }
+
     }
 }

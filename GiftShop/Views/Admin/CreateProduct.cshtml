@@ -1,0 +1,19 @@
+﻿@model Product
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+<h1>Добавяне на продукт</h1>
+<form asp-action="CreateProduct" method="post">
+    <div>
+        <label>Име</label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label>Цена</label>
+        <input asp-for="Price" type="number" />
+    </div>
+    <div>
+        <label>Категория</label>
+        <select asp-for="CategoryId" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))"></select>
+    </div>
+    <button type="submit">Добави</button>
+</form>
