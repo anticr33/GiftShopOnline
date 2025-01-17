@@ -1,11 +1,9 @@
 using GiftShop.Data;
 using GiftShop.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Linq;
 
 namespace GiftShop.Controllers
 {
@@ -13,57 +11,44 @@ namespace GiftShop.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public HomeController(
-               ILogger<HomeController> logger,
-               ApplicationDbContext context,
-               UserManager<IdentityUser> userManager,
-               RoleManager<IdentityRole> roleManager)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
             _context = context;
-            _userManager = userManager;
-            _roleManager = roleManager;
         }
 
+        // Начална страница
         public IActionResult Index()
         {
-            // Проверка дали текущият потребител е в ролята "Admin"
-            var userId = _userManager.GetUserId(User); // Вземи текущия потребител
-            var user = _userManager.FindByIdAsync(userId).Result; // Зареди потребителя
-            if (user == null)
+            if (User.Identity.IsAuthenticated)
             {
-                // Потребителят не е намерен
-                return Redirect("/Identity/Account/Register");
-            }
-            bool isAdmin = _userManager.IsInRoleAsync(user, "Admin").Result;
-
-            if (isAdmin)
-            {
-                ViewBag.Message = "Добре дошли, администраторе!";
+                // Проверка дали потребителят е в ролята Admin
+                ViewBag.IsAdmin = User.IsInRole("Admin");
             }
             else
             {
-                ViewBag.Message = "Добре дошли, потребителю!";
+                ViewBag.IsAdmin = false;
             }
 
+            ViewBag.Message = "Добре дошли в нашия магазин!";
             return View();
         }
 
+        // Страница за поверителност
         public IActionResult Privacy()
         {
             return View();
         }
 
+        // Грешка
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        // Универсален метод за показване на категория по ID
+        // Показване на категория по ID
         public IActionResult Category(int id)
         {
             var category = _context.Categories
@@ -75,12 +60,12 @@ namespace GiftShop.Controllers
                 return NotFound();
             }
 
-            return View("Category", category);
+            return View(category);
         }
+
+        // Покупка на продукт
         public IActionResult BuyProduct(int id)
         {
-            // Тук можете да добавите логика за обработка на покупката.
-            // Например, зареждане на продукта от базата данни:
             var product = _context.Products.FirstOrDefault(p => p.Id == id);
 
             if (product == null)
@@ -91,7 +76,5 @@ namespace GiftShop.Controllers
             // Прехвърляне към страница за потвърждение или кошница
             return View(product);
         }
-
-
     }
 }

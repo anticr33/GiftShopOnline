@@ -1,7 +1,6 @@
-
 @model GiftShop.Models.Product
 
-<h1>Create Product</h1>
+<h1>Add Product</h1>
 
 <form asp-action="CreateProduct" method="post">
     <div class="form-group">
@@ -46,5 +45,5 @@
         <span asp-validation-for="Occasion" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button asp-action="CreateProduct" type="submit" class="btn btn-primary">Add Product</button>
 </form>
