@@ -1,0 +1,33 @@
+
+@model IEnumerable<GiftShop.Models.Product>
+
+<h1>Products</h1>
+<a asp-action="CreateProduct" class="btn btn-success mb-3">Add New Product</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Occasion</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Price.ToString("C")</td>
+                <td>@product.Category?.Name</td> <!-- Проверка дали Category не е null -->
+                <td>@product.Occasion</td>
+                <td>
+                    <a asp-action="DeleteProduct" asp-route-id="@product.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

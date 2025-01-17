@@ -1,5 +1,6 @@
 using GiftShop.Data;
 using GiftShop.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,15 +13,42 @@ namespace GiftShop.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(
+               ILogger<HomeController> logger,
+               ApplicationDbContext context,
+               UserManager<IdentityUser> userManager,
+               RoleManager<IdentityRole> roleManager)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()
         {
+            // Проверка дали текущият потребител е в ролята "Admin"
+            var userId = _userManager.GetUserId(User); // Вземи текущия потребител
+            var user = _userManager.FindByIdAsync(userId).Result; // Зареди потребителя
+            if (user == null)
+            {
+                // Потребителят не е намерен
+                return Redirect("/Identity/Account/Register");
+            }
+            bool isAdmin = _userManager.IsInRoleAsync(user, "Admin").Result;
+
+            if (isAdmin)
+            {
+                ViewBag.Message = "Добре дошли, администраторе!";
+            }
+            else
+            {
+                ViewBag.Message = "Добре дошли, потребителю!";
+            }
+
             return View();
         }
 

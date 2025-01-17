@@ -23,14 +23,17 @@ namespace GiftShop
             {
                 options.Password.RequireDigit = true; // Изисква поне една цифра
                 options.Password.RequiredLength = 6; // Минимална дължина на паролата
-                options.Password.RequireNonAlphanumeric = true; // Не изисква специални символи
-                options.Password.RequireUppercase = false; // Изисква главна буква
-                options.Password.RequireLowercase = false; // Изисква малка буква
+                options.Password.RequireNonAlphanumeric = false; // Не изисква специални символи
+                options.Password.RequireUppercase = true; // Изисква главна буква
+                options.Password.RequireLowercase = true; // Изисква малка буква
+                options.SignIn.RequireConfirmedAccount = true; // Изисква потвърждение на акаунта
             })
+            .AddRoles<IdentityRole>() // Добавя поддръжка за роли
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
             // Добавяне на MVC и Razor Pages
             builder.Services.AddControllersWithViews();
+
 
             var app = builder.Build(); 
             var scope = app.Services.CreateScope();
