@@ -53,22 +53,41 @@ public class AdminController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult CreateProduct(Product model)
+    public async Task<IActionResult> CreateProduct(Product model, IFormFile ImageFile)
     {
-        if (ModelState.IsValid)
-        {
-            // Добавяне на продукта към базата данни
+        //if (ModelState.IsValid)
+        //{
+            // Проверка дали файлът е качен
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                // Създаване на уникално име за снимката
+                string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+
+                // Път за съхранение на снимката в wwwroot/images
+                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", uniqueFileName);
+
+                using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                {
+                    await ImageFile.CopyToAsync(fileStream);
+                }
+
+                // Запазване на пътя към снимката в модела
+                model.ImageUrl = "/images/" + uniqueFileName;
+            //}
+
+            // Запазване на продукта в базата данни
             _context.Products.Add(model);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             // Пренасочване към списъка с продукти
             return RedirectToAction("Products");
-        }
+         }
 
-        // Ако има грешки, презареждаме падащото меню с категориите
+        // Ако има грешки, зареждаме категориите отново за падащото меню
         ViewBag.Categories = _context.Categories.ToList();
         return View(model);
     }
+
 
 
 

@@ -2,7 +2,7 @@
 
 <h1>Add Product</h1>
 
-<form asp-action="CreateProduct" method="post">
+<form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
@@ -22,12 +22,6 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="ImageUrl"></label>
-        <input asp-for="ImageUrl" class="form-control" />
-        <span asp-validation-for="ImageUrl" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
         <label asp-for="CategoryId">Category</label>
         <select asp-for="CategoryId" class="form-control">
             <option value="">-- Select Category --</option>
@@ -40,10 +34,14 @@
     </div>
 
     <div class="form-group">
+        <label for="ImageFile">Upload Image</label>
+        <input type="file" name="ImageFile" class="form-control-file" />
+    </div>
+
+    <div class="form-group">
         <label asp-for="Occasion"></label>
         <input asp-for="Occasion" class="form-control" />
         <span asp-validation-for="Occasion" class="text-danger"></span>
     </div>
-
     <button asp-action="CreateProduct" type="submit" class="btn btn-primary">Add Product</button>
 </form>

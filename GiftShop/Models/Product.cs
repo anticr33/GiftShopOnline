@@ -16,6 +16,7 @@ namespace GiftShop.Models
         [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0")]
         public decimal Price { get; set; }
 
+        [Required(ErrorMessage = "Description is required")]
         public string ImageUrl { get; set; }
 
         [Required(ErrorMessage = "Category is required")]
