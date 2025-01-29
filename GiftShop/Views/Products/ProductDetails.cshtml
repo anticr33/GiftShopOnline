@@ -14,11 +14,18 @@
             <p><strong>Цена:</strong> @Model.Price лв</p>
             <p>@Model.Description</p>
             <div class="my-4">
-                <label>Количество:</label>
-                <input type="number" class="form-control" value="1" min="1">
+                <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <label>Количество:</label>
+                    <input type="number" name="quantity" class="form-control" value="1" min="1">
+                    <button type="submit" class="btn btn-dark btn-lg mb-2">Добави в количката</button>
+                </form>
             </div>
-            <button class="btn btn-dark btn-lg mb-2">Добави в количката</button>
-            <button class="btn btn-outline-dark btn-lg">Купи сега</button>
+            <form asp-controller="Order" asp-action="Checkout" method="post">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn-outline-dark btn-lg">Купи сега</button>
+            </form>
         </div>
     </div>
 </div>

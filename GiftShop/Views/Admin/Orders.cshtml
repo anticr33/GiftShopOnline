@@ -1,0 +1,35 @@
+﻿@model IEnumerable<GiftShop.Models.Order>
+
+<h1>Orders</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>User</th>
+            <th>Date</th>
+            <th>Shipping Address</th>
+            <th>Phone Number</th>
+            <th>Payment Method</th>
+            <th>Shipping Method</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.UserId</td>
+                <td>@order.OrderDate.ToShortDateString()</td>
+                <td>@order.ShippingAddress</td>
+                <td>@order.PhoneNumber</td>
+                <td>@order.PaymentMethod</td>
+                <td>@order.ShippingMethod</td>
+                <td>
+                    <a asp-action="Details" asp-controller="Order" asp-route-id="@order.Id" class="btn btn-info btn-sm">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

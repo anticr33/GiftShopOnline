@@ -9,7 +9,13 @@
             <h1>@Model.Name</h1>
             <p>@Model.Description</p>
             <h3>Цена: @string.Format("{0:C}", Model.Price)</h3>
-            <a href="/Cart/Add/@Model.Id" class="btn btn-success">Добави в количката</a>
+
+            <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <label>Количество:</label>
+                <input type="number" name="quantity" value="1" min="1" class="form-control my-2" />
+                <button type="submit" class="btn btn-success">Добави в количката</button>
+            </form>
         </div>
     </div>
 </div>

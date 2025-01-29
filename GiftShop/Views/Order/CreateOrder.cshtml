@@ -1,0 +1,53 @@
+﻿@model IEnumerable<GiftShop.Models.CartItem>
+
+<h1>Checkout</h1>
+
+<h3>Order Summary</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.Product.Price.ToString("C")</td>
+                <td>@(item.Quantity * item.Product.Price).ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3>Shipping Information</h3>
+<form asp-action="ConfirmOrder" asp-controller="Order" method="post">
+    <div class="form-group">
+        <label for="shippingAddress">Shipping Address</label>
+        <input type="text" id="shippingAddress" name="shippingAddress" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="shippingMethod">Shipping Method</label>
+        <select id="shippingMethod" name="shippingMethod" class="form-control" required>
+            <option value="Econt">Econt</option>
+            <option value="Speedy">Speedy</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="paymentMethod">Payment Method</label>
+        <select id="paymentMethod" name="paymentMethod" class="form-control" required>
+            <option value="Card">Credit Card</option>
+            <option value="CashOnDelivery">Cash on Delivery</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Place Order</button>
+</form>

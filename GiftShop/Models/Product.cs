@@ -24,5 +24,7 @@ namespace GiftShop.Models
         public Category Category { get; set; }
 
         public string Occasion { get; set; }
+
     }
+
 }
