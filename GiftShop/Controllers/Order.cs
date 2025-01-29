@@ -17,6 +17,15 @@ namespace GiftShop.Controllers
             _userManager = userManager;
         }
 
+        // Метод за актуализиране на броя артикули в количката
+        private void UpdateCartCount()
+        {
+            var userId = _userManager.GetUserId(User);
+            ViewData["CartCount"] = _context.CartItems
+                .Where(c => c.UserId == userId)
+                .Sum(c => c.Quantity);
+        }
+
         public IActionResult CreateOrder()
         {
             var userId = _userManager.GetUserId(User);
@@ -30,6 +39,7 @@ namespace GiftShop.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
+            UpdateCartCount(); // Обновява броя артикули в количката
             return View(cartItems);
         }
 
@@ -43,8 +53,10 @@ namespace GiftShop.Controllers
                 .ThenInclude(oi => oi.Product)
                 .ToListAsync();
 
+            UpdateCartCount(); // Обновява количката в навигацията
             return View(orders);
         }
+
         public async Task<IActionResult> OrderDetails(int id)
         {
             var order = await _context.Orders
@@ -57,9 +69,9 @@ namespace GiftShop.Controllers
                 return NotFound();
             }
 
+            UpdateCartCount(); // Обновява количката в навигацията
             return View(order);
         }
-
 
         [HttpPost]
         public IActionResult ConfirmOrder(string shippingAddress, string phoneNumber, string shippingMethod, string paymentMethod)
@@ -94,11 +106,13 @@ namespace GiftShop.Controllers
             _context.CartItems.RemoveRange(cartItems);
             _context.SaveChanges();
 
+            UpdateCartCount(); // Обновява количката след поръчка
             return RedirectToAction("OrderSuccess");
         }
 
         public IActionResult OrderSuccess()
         {
+            UpdateCartCount(); // Обновява количката в навигацията
             return View();
         }
     }

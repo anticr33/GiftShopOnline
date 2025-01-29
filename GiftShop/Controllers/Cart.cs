@@ -66,5 +66,17 @@ namespace GiftShop.Controllers
 
             return View(cartItems);
         }
+        [HttpPost]
+        public IActionResult RemoveFromCart(int id)
+        {
+            var cartItem = _context.CartItems.Find(id);
+            if (cartItem != null)
+            {
+                _context.CartItems.Remove(cartItem);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index", "Cart");
+        }
     }
 }

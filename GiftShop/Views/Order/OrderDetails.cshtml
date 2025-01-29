@@ -8,12 +8,14 @@
     <p><strong>Метод на доставка:</strong> @Model.ShippingMethod</p>
 
     <h3>Продукти в поръчката:</h3>
+
     <table class="table">
         <thead>
             <tr>
                 <th>Продукт</th>
                 <th>Количество</th>
-                <th>Цена</th>
+                <th>Единична цена</th>
+                <th>Общо</th> <!-- Добавяме нова колона за общата стойност -->
             </tr>
         </thead>
         <tbody>
@@ -23,8 +25,11 @@
                     <td>@item.Product.Name</td>
                     <td>@item.Quantity</td>
                     <td>@string.Format("{0:C}", item.Product.Price)</td>
+                    <td>@string.Format("{0:C}", item.Product.Price * item.Quantity)</td> <!-- Изчисляваме общата цена -->
                 </tr>
             }
         </tbody>
     </table>
+
+    <h4><strong>Обща стойност на поръчката:</strong> @string.Format("{0:C}", Model.OrderItems.Sum(i => i.Product.Price * i.Quantity))</h4>
 </div>

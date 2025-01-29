@@ -1,0 +1,33 @@
+﻿@model GiftShop.Models.Order
+
+@{
+    ViewData["Title"] = "Детайли за поръчка";
+}
+
+<h2>Детайли за поръчка № @Model.Id</h2>
+<p><strong>Дата:</strong> @Model.OrderDate</p>
+<p><strong>Метод на плащане:</strong> @Model.PaymentMethod</p>
+<p><strong>Адрес за доставка:</strong> @Model.ShippingAddress</p>
+<p><strong>Метод на доставка:</strong> @Model.ShippingMethod</p>
+
+<h3>Продукти в поръчката:</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Продукт</th>
+            <th>Количество</th>
+            <th>Обща цена</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderItems)
+        {
+            <tr>
+                <td>@item.Product.Name</td>
+                <td>@item.Quantity</td>
+                <td>@string.Format("{0:C}", item.Quantity * item.Product.Price)</td>
+            </tr>
+        }
+    </tbody>
+</table>

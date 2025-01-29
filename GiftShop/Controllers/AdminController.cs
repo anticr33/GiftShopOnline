@@ -5,16 +5,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")] // Ограничаваме достъпа само за администраторите
 public class AdminController : Controller
 {
     private readonly ApplicationDbContext _context;
+
     public AdminController(ILogger<AdminController> logger, ApplicationDbContext context)
     {
         _context = context;
     }
-
-    [Authorize(Roles = "Admin")] // Ограничаваме достъпа само за администратор
 
     public IActionResult Index()
     {
@@ -31,22 +30,42 @@ public class AdminController : Controller
         return View();
     }
 
-    // === Управление на продукти ===
-
-    // Показване на списък с продукти
-    // === Управление на продукти ===
-
-    // Показване на списък с продукти
-    public IActionResult Products()
+    // === Управление на поръчки ===
+    public async Task<IActionResult> Orders()
     {
-        var products = _context.Products.Include(p => p.Category).ToList(); // Зареждане на продукти с категории
-        return View(products); // Препращаме към изгледа
+        var orders = await _context.Orders
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product)
+            .ToListAsync();
+
+        return View(orders);
     }
 
-    // Създаване на нов продукт - GET
+    public async Task<IActionResult> OrderDetails(int id)
+    {
+        var order = await _context.Orders
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product)
+            .FirstOrDefaultAsync(o => o.Id == id);
+
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        return View(order);
+    }
+
+    // === Управление на продукти ===
+
+    public IActionResult Products()
+    {
+        var products = _context.Products.Include(p => p.Category).ToList();
+        return View(products);
+    }
+
     public IActionResult CreateProduct()
     {
-        // Зареждаме категориите за падащото меню
         ViewBag.Categories = _context.Categories.ToList();
         return View();
     }
@@ -55,66 +74,44 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateProduct(Product model, IFormFile ImageFile)
     {
-        //if (ModelState.IsValid)
-        //{
-            // Проверка дали файлът е качен
-            if (ImageFile != null && ImageFile.Length > 0)
+        if (ImageFile != null && ImageFile.Length > 0)
+        {
+            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", uniqueFileName);
+
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {
-                // Създаване на уникално име за снимката
-                string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+                await ImageFile.CopyToAsync(fileStream);
+            }
 
-                // Път за съхранение на снимката в wwwroot/images
-                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", uniqueFileName);
+            model.ImageUrl = "/images/" + uniqueFileName;
+        }
 
-                using (var fileStream = new FileStream(imagePath, FileMode.Create))
-                {
-                    await ImageFile.CopyToAsync(fileStream);
-                }
-
-                // Запазване на пътя към снимката в модела
-                model.ImageUrl = "/images/" + uniqueFileName;
-            //}
-
-            // Запазване на продукта в базата данни
-            _context.Products.Add(model);
-            await _context.SaveChangesAsync();
-
-            // Пренасочване към списъка с продукти
-            return RedirectToAction("Products");
-         }
-
-        // Ако има грешки, зареждаме категориите отново за падащото меню
-        ViewBag.Categories = _context.Categories.ToList();
-        return View(model);
+        _context.Products.Add(model);
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Products");
     }
 
-
-
-
-
-
-    // Изтриване на продукт - GET (потвърждение)
     public IActionResult DeleteProduct(int id)
     {
-        var product = _context.Products.Include(p => p.Category).FirstOrDefault(p => p.Id == id); // Търсим продукта по ID
+        var product = _context.Products.Include(p => p.Category).FirstOrDefault(p => p.Id == id);
         if (product == null)
         {
-            return NotFound(); // Ако не е намерен, връщаме грешка 404
+            return NotFound();
         }
-        return View(product); // Показваме формата за потвърждение
+        return View(product);
     }
 
-    // Изтриване на продукт - POST
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult DeleteProductConfirmed(int id)
     {
-        var product = _context.Products.Find(id); // Търсим продукта по ID
+        var product = _context.Products.Find(id);
         if (product != null)
         {
-            _context.Products.Remove(product); // Премахваме продукта
-            _context.SaveChanges(); // Запазваме промените
+            _context.Products.Remove(product);
+            _context.SaveChanges();
         }
-        return RedirectToAction("Products"); // Връщаме се към списъка с продукти
+        return RedirectToAction("Products");
     }
 }
