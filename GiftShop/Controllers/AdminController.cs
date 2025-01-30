@@ -128,6 +128,54 @@ public class AdminController : Controller
 
         return RedirectToAction("Orders");
     }
+    // GET: Admin/EditProduct/{id}
+    public IActionResult EditProduct(int id)
+    {
+        var product = _context.Products.Find(id);
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        ViewBag.Categories = _context.Categories.ToList();
+        return View(product);
+    }
+
+    // POST: Admin/EditProduct
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditProduct(Product model, IFormFile ImageFile)
+    {
+        var product = await _context.Products.FindAsync(model.Id);
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        product.Name = model.Name;
+        product.Description = model.Description;
+        product.Price = model.Price;
+        product.CategoryId = model.CategoryId;
+        product.Occasion = model.Occasion;
+
+        if (ImageFile != null && ImageFile.Length > 0)
+        {
+            string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
+            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", uniqueFileName);
+
+            using (var fileStream = new FileStream(imagePath, FileMode.Create))
+            {
+                await ImageFile.CopyToAsync(fileStream);
+            }
+
+            product.ImageUrl = "/images/" + uniqueFileName;
+        }
+
+        _context.Update(product);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Products");
+    }
 
 
     public IActionResult DeleteProduct(int id)

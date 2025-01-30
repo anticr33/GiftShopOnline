@@ -1,0 +1,47 @@
+﻿@model GiftShop.Models.Product
+
+<h2>Редактиране на продукт</h2>
+
+<form asp-action="EditProduct" asp-controller="Admin" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label>Име</label>
+        <input type="text" asp-for="Name" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label>Описание</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Цена</label>
+        <input type="number" asp-for="Price" class="form-control" step="0.01" required />
+    </div>
+
+    <div class="form-group">
+        <label>Категория</label>
+        <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))">
+            <option value="">-- Изберете категория --</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Повод</label>
+        <input type="text" asp-for="Occasion" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Текуща снимка</label><br />
+        <img src="@Model.ImageUrl" alt="Продукт" style="max-width: 150px;" />
+    </div>
+
+    <div class="form-group">
+        <label>Качи нова снимка</label>
+        <input type="file" name="ImageFile" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Запази промените</button>
+    <a asp-action="Products" class="btn btn-secondary">Отказ</a>
+</form>

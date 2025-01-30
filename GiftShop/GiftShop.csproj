@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Content Remove="Views\Order\CompletedOrders.cshtml" />
+    <Content Remove="Views\Products\EditProduct.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
