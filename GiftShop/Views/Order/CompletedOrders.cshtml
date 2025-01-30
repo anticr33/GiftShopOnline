@@ -1,0 +1,28 @@
+﻿@model IEnumerable<GiftShop.Models.Order>
+
+<h2>Изпълнени поръчки</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Дата</th>
+            <th>Име на клиента</th>
+            <th>Метод на плащане</th>
+            <th>Детайли</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.OrderDate</td>
+                <td>@order.FullName</td>
+                <td>@(order.PaymentMethod == "Card" ? "Кредитна карта" : "Наложен платеж")</td>
+                <td>
+                    <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })" class="btn btn-info">Виж повече</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

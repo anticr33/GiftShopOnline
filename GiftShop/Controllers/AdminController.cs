@@ -31,15 +31,17 @@ public class AdminController : Controller
     }
 
     // === Управление на поръчки ===
-    public async Task<IActionResult> Orders()
+    public IActionResult Orders()
     {
-        var orders = await _context.Orders
+        var orders = _context.Orders
+            .Where(o => !o.IsCompleted)
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
-            .ToListAsync();
+            .ToList();
 
         return View(orders);
     }
+
 
     public async Task<IActionResult> OrderDetails(int id)
     {
@@ -91,6 +93,42 @@ public class AdminController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction("Products");
     }
+    [HttpPost]
+    public IActionResult CompleteOrder(int id)
+    {
+        var order = _context.Orders.FirstOrDefault(o => o.Id == id);
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        order.IsCompleted = true;
+        _context.SaveChanges();
+
+        return RedirectToAction("Orders"); // Връща към списъка с поръчки
+    }
+
+    public IActionResult CompletedOrders()
+    {
+        var completedOrders = _context.Orders
+            .Where(o => o.IsCompleted)
+            .OrderByDescending(o => o.OrderDate)
+            .ToList();
+
+        return View(completedOrders);
+    }
+    public IActionResult MarkAsCompleted(int id)
+    {
+        var order = _context.Orders.Find(id);
+        if (order != null)
+        {
+            order.IsCompleted = true;
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("Orders");
+    }
+
 
     public IActionResult DeleteProduct(int id)
     {
@@ -101,6 +139,7 @@ public class AdminController : Controller
         }
         return View(product);
     }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]

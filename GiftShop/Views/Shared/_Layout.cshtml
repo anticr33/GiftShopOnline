@@ -48,7 +48,8 @@
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <!-- Потребителско име -->
-                            <a class="btn btn-outline-primary text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">
+                            <a class="btn btn-outline-primary text-dark" asp-area="Identity">
+                                <!--asp-page="/Account/Manage/Index" -->
                                 Здравей, @User.Identity?.Name!
                             </a>
 

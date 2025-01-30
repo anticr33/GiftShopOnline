@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<GiftShop.Models.Order>
 
-<h2>Всички поръчки</h2>
+<h2>Всички поръчки</h2> <a href="@Url.Action("CompletedOrders", "Admin")" class="btn btn-primary">Изпълнени поръчки</a>
+
 
 <table class="table">
     <thead>
@@ -33,9 +34,10 @@
                         <span>@order.PaymentMethod</span> <!-- За всеки друг случай -->
                     }
                 </td>
-
                 <td>
-                    <a href="@Url.Action("OrderDetails", "Order", new { id = order.Id })" class="btn btn-info">Виж повече</a>
+                <td>
+                    <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })" class="btn btn-info">Виж повече</a>
+                    <a href="@Url.Action("MarkAsCompleted", "Admin", new { id = order.Id })" class="btn btn-success">Поръчката е изпълнена</a>
                 </td>
             </tr>
         }
