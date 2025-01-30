@@ -26,6 +26,7 @@ namespace GiftShop.Models
 
         [Required]
         public string PaymentMethod { get; set; } // Карта или наложен платеж
+        public string FullName { get; set; } // Добавено поле за име и фамилия
 
         public ICollection<OrderItem> OrderItems { get; set; }
     }

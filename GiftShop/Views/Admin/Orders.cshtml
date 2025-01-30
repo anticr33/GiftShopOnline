@@ -1,8 +1,4 @@
-﻿@model List<GiftShop.Models.Order>
-
-@{
-    ViewData["Title"] = "Поръчки";
-}
+﻿@model IEnumerable<GiftShop.Models.Order>
 
 <h2>Всички поръчки</h2>
 
@@ -11,7 +7,7 @@
         <tr>
             <th>#</th>
             <th>Дата</th>
-            <th>Потребител</th>
+            <th>Име на клиента</th>
             <th>Метод на плащане</th>
             <th>Детайли</th>
         </tr>
@@ -22,12 +18,24 @@
             <tr>
                 <td>@order.Id</td>
                 <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
-                <td>@order.UserId</td>
-                <td>@order.PaymentMethod</td>
+                <td>@order.FullName</td>
                 <td>
-                    <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })" class="btn btn-info">
-                        Виж повече
-                    </a>
+                    @if (order.PaymentMethod == "CashOnDelivery")
+                    {
+                        <span>Наложен платеж</span>
+                    }
+                    else if (order.PaymentMethod == "Card")
+                    {
+                        <span>Кредитна карта</span>
+                    }
+                    else
+                    {
+                        <span>@order.PaymentMethod</span> <!-- За всеки друг случай -->
+                    }
+                </td>
+
+                <td>
+                    <a href="@Url.Action("OrderDetails", "Order", new { id = order.Id })" class="btn btn-info">Виж повече</a>
                 </td>
             </tr>
         }

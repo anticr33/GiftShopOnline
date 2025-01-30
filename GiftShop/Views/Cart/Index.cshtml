@@ -1,23 +1,25 @@
 ﻿@model IEnumerable<GiftShop.Models.CartItem>
 
-<h1>Your Cart</h1>
+<h1>Вашата количка</h1>
 
 @if (!Model.Any())
 {
-    <p>Your cart is empty. Start shopping!</p>
+    <p>Вашата количка е празна. Започнете да пазарувате!</p>
 }
 else
 {
+
     <table class="table">
         <thead>
             <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-                <th>Actions</th>
+                <th>Продукт</th>
+                <th>Количество</th>
+                <th>Цена</th>
+                <th>Общо</th>
+                <th>Действия</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach (var item in Model)
             {
@@ -25,11 +27,11 @@ else
                     <td>@item.Product.Name</td>
                     <td>@item.Quantity</td>
                     <td>@item.Product.Price.ToString("C")</td>
-                    <td>@(item.Quantity * item.Product.Price).ToString("C")</td>
+                    <td>@(item.Quantity * item.Product.Price)</td>
                     <td>
                         <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
                             <input type="hidden" name="id" value="@item.Id" />
-                            <button class="btn btn-danger btn-sm">Remove</button>
+                            <button class="btn btn-danger btn-sm">Премахнете</button>
                         </form>
                     </td>
                 </tr>
@@ -38,6 +40,6 @@ else
     </table>
 
     <div class="text-end">
-        <a asp-action="CreateOrder" asp-controller="Order" class="btn btn-primary">Proceed to Checkout</a>
+        <a asp-action="CreateOrder" asp-controller="Order" class="btn btn-primary">Продължете към плащане</a>
     </div>
 }

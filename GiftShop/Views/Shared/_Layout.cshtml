@@ -14,28 +14,23 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GiftShop</a>
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-controller="Questionnaire" asp-action="Index">Въпросник</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-controller="Order" asp-action="MyOrders">Моите поръчки</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Questionnaire" asp-action="Index">Въпросник</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Order" asp-action="MyOrders">Моите поръчки</a>
-                        </li>
-
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
@@ -44,25 +39,34 @@
                         }
                     </ul>
 
-                    <!-- Количка (поставена вляво от потребителското име) -->
-                    <a class="btn btn-outline-dark me-3" asp-controller="Cart" asp-action="Index">
-                        🛒 Количка <span class="badge bg-danger">@ViewData["CartCount"]</span>
-                    </a>
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- Количка -->
+                        <a class="btn btn-outline-dark" asp-controller="Cart" asp-action="Index">
+                            🛒 Количка <span class="badge bg-danger">@ViewData["CartCount"]</span>
+                        </a>
 
-                    <!-- Ако потребителят е влязъл -->
-                    @if (SignInManager.IsSignedIn(User))
-                    {
-                        <span class="navbar-text me-3">Здравей, @UserManager.GetUserName(User)!</span>
-                        <a class="btn btn-outline-danger" asp-area="Identity" asp-page="/Account/Logout">Изход</a>
-                    }
-                    else
-                    {
-                        <a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Вход</a>
-                    }
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <!-- Потребителско име -->
+                            <a class="btn btn-outline-primary text-dark" asp-area="Identity" asp-page="/Account/Manage/Index">
+                                Здравей, @User.Identity?.Name!
+                            </a>
+
+                            <!-- Изход -->
+                            <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                                <button type="submit" class="btn btn-outline-danger text-dark">Изход</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Вход</a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -74,6 +78,7 @@
             &copy; 2024 - GiftShop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

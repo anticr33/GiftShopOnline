@@ -26,34 +26,16 @@ namespace GiftShop.Controllers
                 .Sum(c => c.Quantity);
         }
 
-        public IActionResult CreateOrder()
-        {
-            var userId = _userManager.GetUserId(User);
-            var cartItems = _context.CartItems
-                .Where(c => c.UserId == userId)
-                .Include(c => c.Product)
-                .ToList();
-
-            if (!cartItems.Any())
-            {
-                return RedirectToAction("Index", "Cart");
-            }
-
-            UpdateCartCount(); // Обновява броя артикули в количката
-            return View(cartItems);
-        }
-
         public async Task<IActionResult> MyOrders()
         {
             var userId = _userManager.GetUserId(User);
-
             var orders = await _context.Orders
                 .Where(o => o.UserId == userId)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
                 .ToListAsync();
 
-            UpdateCartCount(); // Обновява количката в навигацията
+            UpdateCartCount();
             return View(orders);
         }
 
@@ -69,12 +51,33 @@ namespace GiftShop.Controllers
                 return NotFound();
             }
 
-            UpdateCartCount(); // Обновява количката в навигацията
+            // Вземаме имейла на потребителя, направил поръчката
+            var user = await _userManager.FindByIdAsync(order.UserId);
+            ViewBag.UserEmail = user?.Email;
+
+            UpdateCartCount();
             return View(order);
         }
+        public IActionResult CreateOrder()
+        {
+            var userId = _userManager.GetUserId(User);
+            var cartItems = _context.CartItems
+                .Where(c => c.UserId == userId)
+                .Include(c => c.Product)
+                .ToList();
+
+            if (!cartItems.Any())
+            {
+                return RedirectToAction("Index", "Cart"); // Ако количката е празна, пренасочва потребителя
+            }
+
+            UpdateCartCount();
+            return View(cartItems);
+        }
+
 
         [HttpPost]
-        public IActionResult ConfirmOrder(string shippingAddress, string phoneNumber, string shippingMethod, string paymentMethod)
+        public IActionResult ConfirmOrder(string fullName, string shippingAddress, string phoneNumber, string shippingMethod, string paymentMethod)
         {
             var userId = _userManager.GetUserId(User);
 
@@ -91,6 +94,7 @@ namespace GiftShop.Controllers
             var order = new Order
             {
                 UserId = userId,
+                FullName = fullName,
                 ShippingAddress = shippingAddress,
                 PhoneNumber = phoneNumber,
                 ShippingMethod = shippingMethod,
@@ -106,13 +110,13 @@ namespace GiftShop.Controllers
             _context.CartItems.RemoveRange(cartItems);
             _context.SaveChanges();
 
-            UpdateCartCount(); // Обновява количката след поръчка
             return RedirectToAction("OrderSuccess");
         }
 
+
         public IActionResult OrderSuccess()
         {
-            UpdateCartCount(); // Обновява количката в навигацията
+            UpdateCartCount();
             return View();
         }
     }

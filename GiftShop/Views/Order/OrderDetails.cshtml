@@ -3,9 +3,12 @@
 <div class="container mt-5">
     <h2>Детайли за поръчка № @Model.Id</h2>
     <p><strong>Дата:</strong> @Model.OrderDate</p>
-    <p><strong>Метод на плащане:</strong> @Model.PaymentMethod</p>
+    <p><strong>Имейл на клиента:</strong> @ViewBag.UserEmail</p>
+    <p><strong>Име на клиента:</strong> @Model.FullName</p>
     <p><strong>Адрес за доставка:</strong> @Model.ShippingAddress</p>
+    <p><strong>Телефон:</strong> @Model.PhoneNumber</p>
     <p><strong>Метод на доставка:</strong> @Model.ShippingMethod</p>
+    <p><strong>Метод на плащане:</strong> @Model.PaymentMethod</p>
 
     <h3>Продукти в поръчката:</h3>
 
@@ -14,8 +17,7 @@
             <tr>
                 <th>Продукт</th>
                 <th>Количество</th>
-                <th>Единична цена</th>
-                <th>Общо</th> <!-- Добавяме нова колона за общата стойност -->
+                <th>Обща цена</th>
             </tr>
         </thead>
         <tbody>
@@ -24,12 +26,9 @@
                 <tr>
                     <td>@item.Product.Name</td>
                     <td>@item.Quantity</td>
-                    <td>@string.Format("{0:C}", item.Product.Price)</td>
-                    <td>@string.Format("{0:C}", item.Product.Price * item.Quantity)</td> <!-- Изчисляваме общата цена -->
+                    <td>@(item.Quantity * item.Product.Price) лв.</td>
                 </tr>
             }
         </tbody>
     </table>
-
-    <h4><strong>Обща стойност на поръчката:</strong> @string.Format("{0:C}", Model.OrderItems.Sum(i => i.Product.Price * i.Quantity))</h4>
 </div>

@@ -1,15 +1,13 @@
 ﻿@model IEnumerable<GiftShop.Models.CartItem>
 
-<h1>Checkout</h1>
-
-<h3>Order Summary</h3>
+<h1>Преглед на поръчката</h1>
 <table class="table">
     <thead>
         <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
+            <th>Продукт</th>
+            <th>Количество</th>
+            <th>Цена</th>
+            <th>Общо</th>
         </tr>
     </thead>
     <tbody>
@@ -19,35 +17,40 @@
                 <td>@item.Product.Name</td>
                 <td>@item.Quantity</td>
                 <td>@item.Product.Price.ToString("C")</td>
-                <td>@(item.Quantity * item.Product.Price).ToString("C")</td>
+                <td>@(item.Quantity * item.Product.Price)</td>
             </tr>
         }
     </tbody>
 </table>
 
-<h3>Shipping Information</h3>
+
+<h3>Информация за доставка</h3>
 <form asp-action="ConfirmOrder" asp-controller="Order" method="post">
     <div class="form-group">
-        <label for="shippingAddress">Shipping Address</label>
+        <label for="fullName">Име и фамилия</label>
+        <input type="text" id="fullName" name="fullName" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="shippingAddress">Адрес за доставка</label>
         <input type="text" id="shippingAddress" name="shippingAddress" class="form-control" required />
     </div>
     <div class="form-group">
-        <label for="phoneNumber">Phone Number</label>
+        <label for="phoneNumber">Телефонен номер</label>
         <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" required />
     </div>
     <div class="form-group">
-        <label for="shippingMethod">Shipping Method</label>
+        <label for="shippingMethod">Метод на доставка</label>
         <select id="shippingMethod" name="shippingMethod" class="form-control" required>
-            <option value="Econt">Econt</option>
-            <option value="Speedy">Speedy</option>
+            <option value="Econt">Еконт</option>
+            <option value="Speedy">Спиди</option>
         </select>
     </div>
     <div class="form-group">
-        <label for="paymentMethod">Payment Method</label>
+        <label for="paymentMethod">Метод на плащане</label>
         <select id="paymentMethod" name="paymentMethod" class="form-control" required>
-            <option value="Card">Credit Card</option>
-            <option value="CashOnDelivery">Cash on Delivery</option>
+            <option value="Card">Кредитна карта</option>
+            <option value="CashOnDelivery">Наложен платеж</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-success mt-3">Place Order</button>
+    <button type="submit" class="btn btn-success mt-3">Потвърди поръчката</button>
 </form>
