@@ -5,10 +5,15 @@
 }
 
 <h2>Детайли за поръчка № @Model.Id</h2>
+
 <p><strong>Дата:</strong> @Model.OrderDate</p>
-<p><strong>Метод на плащане:</strong> @Model.PaymentMethod</p>
+
+<p><strong>Имейл на клиента:</strong> @ViewBag.UserEmail</p>
+<p><strong>Име на клиента:</strong> @Model.FullName</p>
 <p><strong>Адрес за доставка:</strong> @Model.ShippingAddress</p>
+<p><strong>Телефон:</strong> @Model.PhoneNumber</p>
 <p><strong>Метод на доставка:</strong> @Model.ShippingMethod</p>
+<p><strong>Метод на плащане:</strong> @Model.PaymentMethod</p>
 
 <h3>Продукти в поръчката:</h3>
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using X.PagedList.Extensions;
 
 namespace GiftShop.Controllers
 {
@@ -49,19 +50,6 @@ namespace GiftShop.Controllers
         }
 
         // Показване на категория по ID
-        public IActionResult Category(int id)
-        {
-            var category = _context.Categories
-                .Include(c => c.Products)
-                .FirstOrDefault(c => c.Id == id);
-
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
 
         // Покупка на продукт
         public IActionResult BuyProduct(int id)
@@ -75,6 +63,31 @@ namespace GiftShop.Controllers
 
             // Прехвърляне към страница за потвърждение или кошница
             return View(product);
+        }
+        public async Task<IActionResult> Category(int id, int? pageNumber)
+        {
+            int pageSize = 12; // Брой продукти на страница
+
+            var category = await _context.Categories
+                .Include(c => c.Products)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            // Създаваме странициран списък
+            var pagedProducts = category.Products.OrderBy(p => p.Id).ToPagedList(pageNumber ?? 1, pageSize);
+
+            // Създаваме CategoryViewModel
+            var viewModel = new CategoryViewModel
+            {
+                Category = category,
+                PagedProducts = pagedProducts
+            };
+
+            return View(viewModel); // Трябва да върнем `CategoryViewModel`
         }
     }
 }

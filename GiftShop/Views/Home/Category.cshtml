@@ -1,25 +1,28 @@
-﻿@model GiftShop.Models.Category
+﻿@model GiftShop.Models.CategoryViewModel
+@using X.PagedList.Mvc.Core
 
-<h2>@Model.Name</h2>
+<h2>@Model.Category.Name</h2>
 
-
-
-<ul>
-    <div class="row">
-        @foreach (var product in Model.Products)
-        {
-            <div class="col-md-3">
-                <div class="card">
-                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
-                    <div class="card-body text-center">
-                        <h5 class="card-title">@product.Name</h5>
-                        <p class="card-text">@product.Description</p>
-                        <p class="card-text">
-                            <strong>@string.Format("{0:C}", product.Price)</strong>
-                        </p>
-                        <a href="/Buy/Product/@product.Id" class="btn btn-primary">Купи сега</a>
-                    </div>
+<div class="row">
+    @foreach (var product in Model.PagedProducts)
+    {
+        <div class="col-md-3">
+            <div class="card">
+                <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                <div class="card-body text-center">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">@product.Description</p>
+                    <p class="card-text">
+                        <strong>@string.Format("{0:C}", product.Price)</strong>
+                    </p>
+                    <a href="/Buy/Product/@product.Id" class="btn btn-primary">Купи сега</a>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
+</div>
+
+<!-- Добавяме бутони за странициране -->
+<div class="pagination-container">
+    @Html.PagedListPager(Model.PagedProducts, page => Url.Action("Category", new { id = Model.Category.Id, pageNumber = page }))
+</div>

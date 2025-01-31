@@ -2,6 +2,7 @@
 using GiftShop.Data;
 using GiftShop.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +10,12 @@ using Microsoft.EntityFrameworkCore;
 public class AdminController : Controller
 {
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public AdminController(ILogger<AdminController> logger, ApplicationDbContext context)
+    public AdminController(ILogger<AdminController> logger, ApplicationDbContext context, UserManager<IdentityUser> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     public IActionResult Index()
@@ -54,6 +57,10 @@ public class AdminController : Controller
         {
             return NotFound();
         }
+
+        // Вземаме имейла на потребителя, направил поръчката
+        var user = await _userManager.FindByIdAsync(order.UserId);
+        ViewBag.UserEmail = user?.Email;
 
         return View(order);
     }
