@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Stock>
+
+<h2>Склад</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>SKU</th>
+            <th>Име на продукт</th>
+            <th>Количество</th>
+            <th>Цена</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product.SKU</td>
+                <td>@item.Product.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.Product.Price</td>
+                <td>
+                    <form asp-action="UpdateStock" method="post">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <input type="number" name="quantity" min="1" placeholder="Добави количество" required />
+                        <button type="submit" class="btn btn-primary">Добави</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

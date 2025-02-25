@@ -25,6 +25,9 @@ namespace GiftShop.Models
 
         public string Occasion { get; set; }
 
+        public string? SKU { get; set; }
+        public int Quantity { get; set; }
+
     }
 
 }

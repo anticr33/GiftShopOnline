@@ -8,6 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Stock\**" />
+    <Content Remove="Views\Stock\**" />
+    <EmbeddedResource Remove="Views\Stock\**" />
+    <None Remove="Views\Stock\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\StockController.cs" />
+    <Compile Remove="Models\Stock.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Views\Order\CompletedOrders.cshtml" />
     <Content Remove="Views\Products\EditProduct.cshtml" />
   </ItemGroup>

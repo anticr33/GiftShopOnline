@@ -58,6 +58,7 @@ namespace GiftShop.Controllers
             UpdateCartCount();
             return View(order);
         }
+
         public IActionResult CreateOrder()
         {
             var userId = _userManager.GetUserId(User);
@@ -75,12 +76,10 @@ namespace GiftShop.Controllers
             return View(cartItems);
         }
 
-
         [HttpPost]
-        public IActionResult ConfirmOrder(string fullName, string shippingAddress, string phoneNumber, string shippingMethod, string paymentMethod)
+        public async Task<IActionResult> ConfirmOrder(string fullName, string shippingAddress, string phoneNumber, string shippingMethod, string paymentMethod)
         {
             var userId = _userManager.GetUserId(User);
-
             var cartItems = _context.CartItems
                 .Where(c => c.UserId == userId)
                 .Include(c => c.Product)
@@ -91,6 +90,28 @@ namespace GiftShop.Controllers
                 return RedirectToAction("Index", "Cart");
             }
 
+            // Проверка за наличност
+            foreach (var item in cartItems)
+            {
+                var product = await _context.Products.FindAsync(item.ProductId);
+                if (product == null || product.Quantity < item.Quantity)
+                {
+                    TempData["Error"] = $"Недостатъчна наличност за {item.Product.Name}.";
+                    return RedirectToAction("CreateOrder");
+                }
+            }
+
+            // Намаляване на наличността
+            foreach (var item in cartItems)
+            {
+                var product = await _context.Products.FindAsync(item.ProductId);
+                if (product != null)
+                {
+                    product.Quantity -= item.Quantity;
+                }
+            }
+
+            // Записване на поръчката
             var order = new Order
             {
                 UserId = userId,
@@ -107,8 +128,11 @@ namespace GiftShop.Controllers
             };
 
             _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
+            // Изчистване на количката след поръчка
             _context.CartItems.RemoveRange(cartItems);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("OrderSuccess");
         }

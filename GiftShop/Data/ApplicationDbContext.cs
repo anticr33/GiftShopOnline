@@ -20,7 +20,6 @@ namespace GiftShop.Data
         public DbSet<OrderItem> OrderItems { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

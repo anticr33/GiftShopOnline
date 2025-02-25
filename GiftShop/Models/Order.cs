@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GiftShop.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -29,6 +30,12 @@ namespace GiftShop.Models
         public string FullName { get; set; } // Добавено поле за име и фамилия
         public bool IsCompleted { get; set; } = false;
 
+        
         public ICollection<OrderItem> OrderItems { get; set; }
+
+        internal async Task UpdateStock(ApplicationDbContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

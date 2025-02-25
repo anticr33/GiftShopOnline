@@ -1,14 +1,23 @@
 @model IEnumerable<GiftShop.Models.Product>
 
-<h1>Продукти</h1>
-<a asp-action="CreateProduct" class="btn btn-success mb-3">Добави нов продукт</a>
+<h2>Продукти</h2>
 
-<table class="table table-striped">
+<a asp-action="CreateProduct" class="btn btn-success mb-3">Добави нов продукт</a>
+<!-- Търсачка -->
+<form method="get" asp-action="Index">
+    <input type="text" name="searchQuery" placeholder="Търси по име, SKU или категория" value="@Context.Request.Query["searchQuery"]" />
+    <button type="submit" class="btn btn-primary">Търси</button>
+</form>
+
+<table class="table">
     <thead>
         <tr>
+            <th>Снимка</th>
             <th>Име</th>
             <th>Описание</th>
             <th>Цена</th>
+            <th>SKU</th>
+            <th>Количество</th>
             <th>Категория</th>
             <th>Действия</th>
         </tr>
@@ -17,19 +26,30 @@
         @foreach (var product in Model)
 
         {
-                <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Description</td>
-                    <td>@product.Price.ToString("C")</td>
-                    <td>@product.Category?.Name </td>
+            <tr>
+                <td>
+                    <img src="@product.ImageUrl" alt="@product.Name" style="width: 100px; height: auto;" />
+                </td>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Price лв.</td>
+                <td>@product.SKU</td>
+                <td>@product.Quantity</td>
+                <td>@product.Category?.Name</td>
+                <td>
+                    <form asp-controller="Products" asp-action="UpdateQuantity" method="post">
+                        <input type="hidden" name="id" value="@product.Id" />
+                        <input type="number" name="quantity" min="1" placeholder="Добави количество" required />
+                        <button type="submit" class="btn btn-success">Добави количество</button>
+                    </form>
+                <td>
                 <td>
                     <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-warning">Редактиране</a>
                     <form asp-action="DeleteProductConfirmed" asp-route-id="@product.Id" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-danger">Изтриване</button>
                     </form>
                 </td>
-
-                </tr>
+            </tr>
         }
     </tbody>
 </table>
