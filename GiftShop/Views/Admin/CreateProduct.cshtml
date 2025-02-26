@@ -1,30 +1,30 @@
 @model GiftShop.Models.Product
 
-<h1>Add Product</h1>
+<h1>Добави продукт</h1>
 
 <form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
+        <label for="Name">Име на продукта</label>
+        <input asp-for="Name" class="form-control" id="Name" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Description"></label>
+        <label for="Description">Описание</label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Price"></label>
+        <label for="Price">Цена (лв.)</label>
         <input asp-for="Price" type="number" step="0.01" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="CategoryId">Category</label>
+        <label for="CategoryId">Категория</label>
         <select asp-for="CategoryId" class="form-control">
-            <option value="">-- Select Category --</option>
+            <option value="">-- Избери категория --</option>
             @foreach (var category in ViewBag.Categories as IEnumerable<GiftShop.Models.Category>)
             {
                 <option value="@category.Id">@category.Name</option>
@@ -34,18 +34,20 @@
     </div>
 
     <div class="form-group">
-        <label for="ImageFile">Upload Image</label>
+        <label for="ImageFile">Качване на изображение</label>
         <input type="file" name="ImageFile" class="form-control-file" />
     </div>
 
     <div class="form-group">
-        <label asp-for="Occasion"></label>
+        <label for="Occasion">Повод</label>
         <input asp-for="Occasion" class="form-control" />
         <span asp-validation-for="Occasion" class="text-danger"></span>
     </div>
-    <button asp-action="CreateProduct" type="submit" class="btn btn-primary">Add Product</button>
+
+    <div class="form-group">
+        <label for="SKU">SKU номер</label>
+        <input asp-for="SKU" class="form-control" required />
+    </div>
+
+    <button asp-action="CreateProduct" type="submit" class="btn btn-primary">Добави продукт</button>
 </form>
-<div class="form-group">
-    <label asp-for="SKU"></label>
-    <input asp-for="SKU" class="form-control" required />
-</div>

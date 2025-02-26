@@ -5,20 +5,20 @@
 <a asp-action="CreateProduct" class="btn btn-success mb-3">Добави нов продукт</a>
 <!-- Търсачка -->
 <form method="get" asp-action="Index">
-    <input type="text" name="searchQuery" placeholder="Търси по име, SKU или категория" value="@Context.Request.Query["searchQuery"]" />
+    <input type="text" name="searchQuery" placeholder="Натисни control и f търсачката не работи" value="@Context.Request.Query["searchQuery"]" />
     <button type="submit" class="btn btn-primary">Търси</button>
 </form>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Снимка</th>
+            <th>SKU</th>
             <th>Име</th>
             <th>Описание</th>
             <th>Цена</th>
-            <th>SKU</th>
             <th>Количество</th>
             <th>Категория</th>
+            <th>Снимка</th>
             <th>Действия</th>
         </tr>
     </thead>
@@ -27,15 +27,15 @@
 
         {
             <tr>
-                <td>
-                    <img src="@product.ImageUrl" alt="@product.Name" style="width: 100px; height: auto;" />
-                </td>
+                <td>@product.SKU</td>
                 <td>@product.Name</td>
                 <td>@product.Description</td>
                 <td>@product.Price лв.</td>
-                <td>@product.SKU</td>
                 <td>@product.Quantity</td>
                 <td>@product.Category?.Name</td>
+                <td>
+                    <img src="@product.ImageUrl" alt="@product.Name" style="width: 100px; height: auto;" />
+                </td>
                 <td>
                     <form asp-controller="Products" asp-action="UpdateQuantity" method="post">
                         <input type="hidden" name="id" value="@product.Id" />
