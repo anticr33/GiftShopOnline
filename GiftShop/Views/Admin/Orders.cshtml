@@ -38,7 +38,10 @@
                 <td>
                     <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })" class="btn btn-info">Виж повече</a>
                     <a href="@Url.Action("MarkAsCompleted", "Admin", new { id = order.Id })" class="btn btn-success">Поръчката е изпълнена</a>
+
                 </td>
+                <td>@(order.UserId == "Manual" ? "Ръчна поръчка" : order.UserId)</td>
+
             </tr>
         }
     </tbody>

@@ -49,8 +49,7 @@ namespace GiftShop.Controllers
             else if (model.SelectedAnswers[0] == "Дете")
                 filteredProducts = filteredProducts.Where(p => p.CategoryId == 3);
 
-            // Филтър по повод
-            filteredProducts = filteredProducts.Where(p => p.Occasion == model.SelectedAnswers[1]);
+
 
             // Филтър по бюджет
             if (model.SelectedAnswers[2] == "До 20 лв.")

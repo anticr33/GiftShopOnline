@@ -78,6 +78,51 @@ public class AdminController : Controller
         ViewBag.Categories = _context.Categories.ToList();
         return View();
     }
+    [HttpGet]
+    public IActionResult CreateManualOrder()
+    {
+        var products = _context.Products.Where(p => p.Quantity > 0).ToList();
+        ViewBag.Products = products; // Изпращаме списъка с продукти към изгледа
+        return View();
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> ProcessManualOrder(int productId, int quantity, string customerName, string shippingAddress)
+    {
+        var product = await _context.Products.FindAsync(productId);
+
+        if (product == null || product.Quantity < quantity)
+        {
+            TempData["Error"] = "Недостатъчна наличност!";
+            return RedirectToAction("CreateManualOrder");
+        }
+
+        // Намаляване на количеството
+        product.Quantity -= quantity;
+
+        // Създаване на нова поръчка
+        var order = new Order
+        {
+            UserId = "Manual", // Маркираме поръчката като ръчна
+            FullName = customerName,
+            ShippingAddress = shippingAddress,
+            PhoneNumber = "Не е зададен",
+            ShippingMethod = "Ръчно",
+            PaymentMethod = "Ръчно",
+            OrderItems = new List<OrderItem>
+        {
+            new OrderItem { ProductId = productId, Quantity = quantity }
+        }
+        };
+
+        _context.Orders.Add(order);
+        await _context.SaveChangesAsync();
+
+        TempData["Success"] = "Ръчната поръчка е създадена успешно!";
+        return RedirectToAction("Index");
+    }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -163,7 +208,7 @@ public class AdminController : Controller
         product.Description = model.Description;
         product.Price = model.Price;
         product.CategoryId = model.CategoryId;
-        product.Occasion = model.Occasion;
+
 
         if (ImageFile != null && ImageFile.Length > 0)
         {

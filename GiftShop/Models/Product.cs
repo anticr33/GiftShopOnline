@@ -23,7 +23,6 @@ namespace GiftShop.Models
         public int CategoryId { get; set; } // Foreign key
         public Category Category { get; set; }
 
-        public string Occasion { get; set; }
 
         public string? SKU { get; set; }
         public int Quantity { get; set; }

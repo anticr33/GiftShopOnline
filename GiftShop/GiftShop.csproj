@@ -8,14 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Questionnaire\**" />
     <Compile Remove="Views\Stock\**" />
+    <Content Remove="Views\Questionnaire\**" />
     <Content Remove="Views\Stock\**" />
+    <EmbeddedResource Remove="Views\Questionnaire\**" />
     <EmbeddedResource Remove="Views\Stock\**" />
+    <None Remove="Views\Questionnaire\**" />
     <None Remove="Views\Stock\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\QuestionnaireController.cs" />
     <Compile Remove="Controllers\StockController.cs" />
+    <Compile Remove="Models\QuestionnaireViewModel.cs" />
     <Compile Remove="Models\Stock.cs" />
   </ItemGroup>
 
