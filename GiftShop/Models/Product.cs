@@ -27,6 +27,10 @@ namespace GiftShop.Models
         public string? SKU { get; set; }
         public int Quantity { get; set; }
 
+        [Required(ErrorMessage = "Purchase price is required")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Purchase price must be greater than 0")]
+        public decimal PurchasePrice { get; set; } // Цена на закупуване
+
     }
 
 }

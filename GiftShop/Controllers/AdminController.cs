@@ -240,6 +240,48 @@ public class AdminController : Controller
         return View(product);
     }
 
+    public IActionResult Statistics(DateTime? startDate, DateTime? endDate, string filter = "day")
+    {
+        var query = _context.Orders
+            .Where(o => o.IsCompleted) // Филтрираме първо
+            .AsQueryable(); // Уверяваме се, че остава IQueryable
+
+        // Приложи филтрите по дата преди Include()
+        if (startDate.HasValue && endDate.HasValue)
+        {
+            query = query.Where(o => o.OrderDate >= startDate.Value && o.OrderDate <= endDate.Value);
+        }
+        else
+        {
+            var today = DateTime.Today;
+            if (filter == "day")
+                query = query.Where(o => o.OrderDate >= today);
+            else if (filter == "week")
+                query = query.Where(o => o.OrderDate >= today.AddDays(-7));
+            else if (filter == "month")
+                query = query.Where(o => o.OrderDate >= today.AddMonths(-1));
+        }
+
+        // След като филтрирахме, добавяме Include() за зависимостите
+        query = query
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.Product);
+
+        var orders = query.ToList();
+        var revenue = orders.Sum(o => o.OrderItems.Sum(oi => oi.Product.Price * oi.Quantity));
+        var cost = orders.Sum(o => o.OrderItems.Sum(oi => oi.Product.PurchasePrice * oi.Quantity));
+        var profit = revenue - cost;
+
+        var model = new StatisticsViewModel
+        {
+            TotalRevenue = revenue,
+            TotalProfit = profit,
+            Orders = orders
+        };
+
+        return View(model);
+
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -254,3 +296,5 @@ public class AdminController : Controller
         return RedirectToAction("Products");
     }
 }
+
+   
