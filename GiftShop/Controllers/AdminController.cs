@@ -243,17 +243,18 @@ public class AdminController : Controller
     public IActionResult Statistics(DateTime? startDate, DateTime? endDate, string filter = "day")
     {
         var query = _context.Orders
-            .Where(o => o.IsCompleted) // Филтрираме първо
-            .AsQueryable(); // Уверяваме се, че остава IQueryable
+            .Where(o => o.IsCompleted) // Само завършени поръчки
+            .AsQueryable(); // Оставяме като IQueryable за динамично филтриране
 
-        // Приложи филтрите по дата преди Include()
-        if (startDate.HasValue && endDate.HasValue)
+        var today = DateTime.Today;
+
+        // 🛠 Поправен филтър "От-до"
+        if (filter == "custom" && startDate.HasValue && endDate.HasValue)
         {
             query = query.Where(o => o.OrderDate >= startDate.Value && o.OrderDate <= endDate.Value);
         }
         else
         {
-            var today = DateTime.Today;
             if (filter == "day")
                 query = query.Where(o => o.OrderDate >= today);
             else if (filter == "week")
@@ -262,12 +263,14 @@ public class AdminController : Controller
                 query = query.Where(o => o.OrderDate >= today.AddMonths(-1));
         }
 
-        // След като филтрирахме, добавяме Include() за зависимостите
+        // 🛠 Добавяме Include() СЛЕД като сме приложили филтрите
         query = query
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product);
 
         var orders = query.ToList();
+
+        // 🛠 Изчисляване на приходите и разходите
         var revenue = orders.Sum(o => o.OrderItems.Sum(oi => oi.Product.Price * oi.Quantity));
         var cost = orders.Sum(o => o.OrderItems.Sum(oi => oi.Product.PurchasePrice * oi.Quantity));
         var profit = revenue - cost;
@@ -280,8 +283,8 @@ public class AdminController : Controller
         };
 
         return View(model);
-
     }
+
 
     [HttpPost]
     [ValidateAntiForgeryToken]

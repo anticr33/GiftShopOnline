@@ -9,20 +9,40 @@
 
 <form method="get" class="mb-3">
     <label for="filter">Филтър:</label>
-    <select name="filter" class="form-select" onchange="this.form.submit();">
+    <select name="filter" class="form-select" id="filterSelect" onchange="toggleDateFields();">
         <option value="day" selected>Днес</option>
         <option value="week">Седмица</option>
         <option value="month">Месец</option>
         <option value="custom">От-до</option>
     </select>
+
     <div id="customDates" style="display: none;">
         <label for="startDate">От:</label>
-        <input type="date" name="startDate" class="form-control">
+        <input type="date" name="startDate" id="startDate" class="form-control">
         <label for="endDate">До:</label>
-        <input type="date" name="endDate" class="form-control">
+        <input type="date" name="endDate" id="endDate" class="form-control">
         <button type="submit" class="btn btn-primary mt-2">Филтрирай</button>
     </div>
 </form>
+
+<script>
+    function toggleDateFields() {
+        var filter = document.getElementById("filterSelect").value;
+        var dateFields = document.getElementById("customDates");
+        
+        if (filter === "custom") {
+            dateFields.style.display = "block";
+        } else {
+            dateFields.style.display = "none";
+        }
+    }
+
+    // Поддържа избора след презареждане на страницата
+    document.addEventListener("DOMContentLoaded", function() {
+        toggleDateFields();
+    });
+</script>
+
 
 <h3>Оборот: @Model.TotalRevenue.ToString("C")</h3>
 <h3>Печалба: @Model.TotalProfit.ToString("C")</h3>

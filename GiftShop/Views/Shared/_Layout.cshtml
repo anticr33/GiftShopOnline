@@ -3,7 +3,7 @@
 @inject UserManager<IdentityUser> UserManager
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bg">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GiftShop.styles.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
@@ -26,7 +27,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Order" asp-action="MyOrders">Моите поръчки</a>
+
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
@@ -36,23 +37,34 @@
                         }
                     </ul>
 
-                    <div class="d-flex align-items-center gap-2">
+                    <div class="d-flex align-items-center gap-3">
                         <!-- Количка -->
-                        <a class="btn btn-outline-dark" asp-controller="Cart" asp-action="Index">
-                            🛒 Количка <span class="badge bg-danger">@ViewData["CartCount"]</span>
+                        <a class="btn btn-outline-dark d-flex align-items-center" asp-controller="Cart" asp-action="Index">
+                            <i class="fas fa-shopping-cart me-1"></i> Количка
+                            <span class="badge bg-danger ms-1">@ViewData["CartCount"]</span>
                         </a>
 
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            <!-- Потребителско име -->
-                            <a class="btn btn-outline-primary text-dark" asp-area="Identity">
-                                <!--asp-page="/Account/Manage/Index" -->
-                                Здравей, @User.Identity?.Name!
-                            </a>
+                            <!-- Потребителско меню с падащо меню -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-1"></i> @User.Identity.Name
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Order" asp-action="MyOrders">Моите поръчки</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="/Account/Settings">Настройки</a></li>
+                                    <li asp-area="Identity" asp-page="/Account/Logout" method="post">
+                                        <button type="submit" class="btn btn-outline-danger">Изход</button>
+                                    </li>
+                                </ul>
+                            </div>
 
                             <!-- Изход -->
                             <form asp-area="Identity" asp-page="/Account/Logout" method="post">
-                                <button type="submit" class="btn btn-outline-danger text-dark">Изход</button>
+                                <button type="submit" class="btn btn-outline-danger">Изход</button>
                             </form>
                         }
                         else
