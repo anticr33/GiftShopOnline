@@ -6,7 +6,7 @@ namespace GiftShop.Models
     public class CartItem
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         [ForeignKey("Product")]
         public int ProductId { get; set; }
@@ -14,5 +14,6 @@ namespace GiftShop.Models
 
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
         public int Quantity { get; set; }
+        public string SessionId { get; set; } = Guid.NewGuid().ToString(); // Генерираме стойност по подразбиране
     }
 }

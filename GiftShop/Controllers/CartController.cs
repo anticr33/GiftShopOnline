@@ -1,4 +1,4 @@
-﻿using GiftShop.Data;
+using GiftShop.Data;
 using GiftShop.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

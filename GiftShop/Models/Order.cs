@@ -1,4 +1,4 @@
-﻿using GiftShop.Data;
+using GiftShop.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,8 +10,8 @@ namespace GiftShop.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public string UserId { get; set; } // Свързване с потребителя
+        public string? UserId { get; set; } // Позволяваме NULL за гости
+        public string SessionId { get; set; } = Guid.NewGuid().ToString(); // Генерираме стойност по подразбиране за гости
 
         [Required]
         public DateTime OrderDate { get; set; } = DateTime.Now;
@@ -27,15 +27,12 @@ namespace GiftShop.Models
 
         [Required]
         public string PaymentMethod { get; set; } // Карта или наложен платеж
+
         public string FullName { get; set; } // Добавено поле за име и фамилия
         public bool IsCompleted { get; set; } = false;
 
-        
-        public ICollection<OrderItem> OrderItems { get; set; }
+        public string Status { get; set; } = "Pending"; // Статус по подразбиране
 
-        internal async Task UpdateStock(ApplicationDbContext context)
-        {
-            throw new NotImplementedException();
-        }
+        public ICollection<OrderItem> OrderItems { get; set; }
     }
 }
