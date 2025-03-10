@@ -34,5 +34,6 @@ namespace GiftShop.Models
         public string Status { get; set; } = "Pending"; // Статус по подразбиране
 
         public ICollection<OrderItem> OrderItems { get; set; }
+        public decimal TotalPrice { get; internal set; }
     }
 }

@@ -1,56 +1,124 @@
 ﻿@model IEnumerable<GiftShop.Models.CartItem>
 
-<h1>Преглед на поръчката</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Продукт</th>
-            <th>Количество</th>
-            <th>Цена</th>
-            <th>Общо</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="checkout-container">
+    <h1 class="checkout-title">Преглед на поръчката</h1>
+
+    <table class="checkout-table">
+        <thead>
             <tr>
-                <td>@item.Product.Name</td>
-                <td>@item.Quantity</td>
-                <td>@item.Product.Price.ToString("C")</td>
-                <td>@(item.Quantity * item.Product.Price)</td>
+                <th>Продукт</th>
+                <th>Количество</th>
+                <th>Цена</th>
+                <th>Общо</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="product-info">
+                        <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="product-image" />
+                        <span>@item.Product.Name</span>
+                    </td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Product.Price.ToString("C")</td>
+                    <td>@(item.Quantity * item.Product.Price)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
+    <h3 class="section-title">Информация за доставка</h3>
+    <form asp-action="ConfirmOrder" asp-controller="Order" method="post" class="checkout-form">
+        <div class="form-group">
+            <label for="fullName">Име и фамилия</label>
+            <input type="text" id="fullName" name="fullName" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="shippingAddress">Адрес за доставка</label>
+            <input type="text" id="shippingAddress" name="shippingAddress" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Телефонен номер</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="shippingMethod">Метод на доставка</label>
+            <select id="shippingMethod" name="shippingMethod" class="form-control" required>
+                <option value="Econt">Еконт</option>
+                <option value="Speedy">Спиди</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="paymentMethod">Метод на плащане</label>
+            <select id="paymentMethod" name="paymentMethod" class="form-control" required>
+                <option value="CashOnDelivery">Наложен платеж</option>
+            </select>
+        </div>
+        <button type="submit" class="checkout-btn">Потвърди поръчката</button>
+    </form>
+</div>
 
-<h3>Информация за доставка</h3>
-<form asp-action="ConfirmOrder" asp-controller="Order" method="post">
-    <div class="form-group">
-        <label for="fullName">Име и фамилия</label>
-        <input type="text" id="fullName" name="fullName" class="form-control" required />
-    </div>
-    <div class="form-group">
-        <label for="shippingAddress">Адрес за доставка</label>
-        <input type="text" id="shippingAddress" name="shippingAddress" class="form-control" required />
-    </div>
-    <div class="form-group">
-        <label for="phoneNumber">Телефонен номер</label>
-        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" required />
-    </div>
-    <div class="form-group">
-        <label for="shippingMethod">Метод на доставка</label>
-        <select id="shippingMethod" name="shippingMethod" class="form-control" required>
-            <option value="Econt">Еконт</option>
-            <option value="Speedy">Спиди</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="paymentMethod">Метод на плащане</label>
-        <select id="paymentMethod" name="paymentMethod" class="form-control" required>
-            <!-- <option value="Card">Кредитна карта</option> -->
-            <option value="CashOnDelivery">Наложен платеж</option>
-        </select>
-    </div>
-    <button type="submit" class="btn btn-success mt-3">Потвърди поръчката</button>
-</form>
+<style>
+.checkout-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.checkout-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+.checkout-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.checkout-table th, .checkout-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.product-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+.section-title {
+    font-size: 20px;
+    margin-top: 20px;
+}
+.checkout-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+.form-control {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.checkout-btn {
+    background: black;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+</style>

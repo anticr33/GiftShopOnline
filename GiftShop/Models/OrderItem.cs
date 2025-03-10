@@ -22,5 +22,6 @@ namespace GiftShop.Models
 
         [Required]
         public int Quantity { get; set; }
+        public decimal Price { get; internal set; }
     }
 }

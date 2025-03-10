@@ -2,32 +2,29 @@
 
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-6">
-            <img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Name" />
+        <div class="col-md-6 d-flex align-items-center">
+            <img src="@Model.ImageUrl" class="img-fluid rounded shadow" alt="@Model.Name" />
         </div>
         <div class="col-md-6">
-            <h1>@Model.Name</h1>
-            <p>@Model.Description</p>
-            <h3>Цена: @string.Format("{0:C}", Model.Price)</h3>
-
-            <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                <input type="hidden" name="productId" value="@Model.Id" />
+            <h1 class="fw-bold mb-3">@Model.Name</h1>
+            <p class="fs-4 mb-3"><strong>Цена:</strong> @string.Format("{0:F2}", Model.Price) лв</p>
+            <h4 class="fw-bold">Описание</h4>
+            <p class="text-muted">@Model.Description</p>
+            <p class="fs-5 mb-3"><strong>Количество:</p>
+            <div class="my-4 d-flex flex-column gap-3">
                 <form asp-controller="Cart" asp-action="AddToCart" method="post">
                     <input type="hidden" name="productId" value="@Model.Id" />
-
-                    <label>Количество:</label>
-                    <input type="number" name="quantity" class="form-control" value="1" min="1" max="@Model.Quantity">
-
-                    @if (Model.Quantity > 0)
-                    {
-                        <button type="submit" class="btn btn-success btn-lg mb-2">Добави в количката</button>
-                    }
-                    else
-                    {
-                        <button type="button" class="btn btn-danger btn-lg mb-2" disabled>Изчерпано количество</button>
-                    }
+                    <div class="input-group">
+                        <input type="number" name="quantity" class="form-control w-25" value="1" min="1">
+                        <button type="submit" class="btn btn-dark btn-lg">Добави в количката</button>
+                    </div>
                 </form>
-            </form>
+                <form asp-action="CreateOrder" asp-controller="Order">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-outline-dark btn-lg">Купи сега</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

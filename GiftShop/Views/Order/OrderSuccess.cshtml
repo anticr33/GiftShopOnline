@@ -1,3 +1,53 @@
-﻿<h1>Order Confirmed</h1>
-<p>Thank you for your order! We will process it as soon as possible.</p>
-<a asp-action="Index" asp-controller="Home" class="btn btn-primary">Return to Home</a>
+﻿@{
+    ViewData["Title"] = "Order Confirmed";
+}
+
+<div class="order-confirmation-container">
+    <h1 class="confirmation-title">Поръчката е потвърдена</h1>
+    <p class="confirmation-message">Благодарим ви за поръчката! Ние ще я обработим възможно най-скоро.</p>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-outline-dark btn-lg">Върни се в началото</a>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .order-confirmation-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 50px;
+        background-color: #f9f9f9;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 50px auto;
+    }
+
+    .confirmation-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .confirmation-message {
+        font-size: 1.2rem;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+    }
+
+    .return-home-btn {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+        background-color: #3498db;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .return-home-btn:hover {
+        background-color: #2980b9;
+    }
+</style>
