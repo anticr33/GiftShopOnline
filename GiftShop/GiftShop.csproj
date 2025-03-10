@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\CartController.cs" />
+    <Compile Remove="Controllers\Order.cs" />
     <Compile Remove="Controllers\QuestionnaireController.cs" />
     <Compile Remove="Controllers\StockController.cs" />
     <Compile Remove="Models\QuestionnaireViewModel.cs" />

@@ -10,20 +10,29 @@
             <p class="fs-4 mb-3"><strong>Цена:</strong> @string.Format("{0:F2}", Model.Price) лв</p>
             <h4 class="fw-bold">Описание</h4>
             <p class="text-muted">@Model.Description</p>
-            <p class="fs-5 mb-3"><strong>Количество:</p>
+            <p class="fs-5 mb-3"><strong>Количество:</strong></p>
+
             <div class="my-4 d-flex flex-column gap-3">
-                <form asp-controller="Cart" asp-action="AddToCart" method="post">
-                    <input type="hidden" name="productId" value="@Model.Id" />
-                    <div class="input-group">
-                        <input type="number" name="quantity" class="form-control w-25" value="1" min="1">
-                        <button type="submit" class="btn btn-dark btn-lg">Добави в количката</button>
-                    </div>
-                </form>
-                <form asp-action="CreateOrder" asp-controller="Order">
-                    <input type="hidden" name="productId" value="@Model.Id" />
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="btn btn-outline-dark btn-lg">Купи сега</button>
-                </form>
+                @if (Model.Quantity > 0)
+                {
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <div class="input-group">
+                            <input type="number" name="quantity" class="form-control w-25" value="1" min="1" max="@Model.Quantity">
+
+                        </div>
+                    </form>
+
+                    <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                        <input type="hidden" name="productId" value="@Model.Id" />
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" class="btn btn-outline-dark btn-lg">Купи сега</button>
+                    </form>
+                }
+                else
+                {
+                    <button class="btn btn-danger btn-lg w-100" disabled>❌ Недостатъчна наличност</button>
+                }
             </div>
         </div>
     </div>
