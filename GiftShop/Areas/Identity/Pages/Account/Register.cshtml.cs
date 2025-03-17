@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -48,17 +49,18 @@ namespace GiftShop.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Имейлът е задължителен.")]
+            [EmailAddress(ErrorMessage = "Невалиден имейл адрес.")]
             [Display(Name = "Имейл")]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Паролата е задължителна.")]
             [StringLength(100, ErrorMessage = "Паролата трябва да е между {2} и {1} символа.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Парола")]
             public string Password { get; set; }
 
+            [Required(ErrorMessage = "Трябва да потвърдите паролата.")]
             [DataType(DataType.Password)]
             [Display(Name = "Потвърдете паролата")]
             [Compare("Password", ErrorMessage = "Паролите не съвпадат.")]
@@ -76,17 +78,22 @@ namespace GiftShop.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = CreateUser();
+                _logger.LogWarning("Формата за регистрация съдържа грешки.");
+                return Page();
+            }
 
+            var user = CreateUser();
+            try
+            {
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("Потребителят създаде нов акаунт с парола.");
+                    _logger.LogInformation("Потребителят {Email} създаде акаунт.", Input.Email);
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -97,8 +104,17 @@ namespace GiftShop.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Потвърдете вашия имейл",
-                        $"Моля, потвърдете акаунта си, като <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>кликнете тук</a>.");
+                    try
+                    {
+                        await _emailSender.SendEmailAsync(Input.Email, "Потвърдете вашия имейл",
+                            $"Моля, потвърдете акаунта си, като <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>кликнете тук</a>.");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Грешка при изпращане на имейл до {Email}.", Input.Email);
+                        ModelState.AddModelError(string.Empty, "Възникна грешка при изпращане на потвърдителния имейл. Моля, опитайте отново по-късно.");
+                        return Page();
+                    }
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -116,6 +132,11 @@ namespace GiftShop.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Грешка при регистрация на потребител {Email}.", Input.Email);
+                ModelState.AddModelError(string.Empty, "Възникна неочаквана грешка при регистрацията. Моля, опитайте отново.");
+            }
 
             return Page();
         }
@@ -126,9 +147,10 @@ namespace GiftShop.Areas.Identity.Pages.Account
             {
                 return Activator.CreateInstance<IdentityUser>();
             }
-            catch
+            catch (Exception ex)
             {
-                throw new InvalidOperationException("Неуспешно създаване на потребител.");
+                _logger.LogError(ex, "Неуспешно създаване на потребител.");
+                throw new InvalidOperationException("Грешка при създаване на потребител. Моля, опитайте отново.");
             }
         }
 
@@ -136,6 +158,7 @@ namespace GiftShop.Areas.Identity.Pages.Account
         {
             if (!_userManager.SupportsUserEmail)
             {
+                _logger.LogError("Системата изисква имейл поддръжка за потребителите.");
                 throw new NotSupportedException("Системата изисква имейл поддръжка за потребителите.");
             }
             return (IUserEmailStore<IdentityUser>)_userStore;

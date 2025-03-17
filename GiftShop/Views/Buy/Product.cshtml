@@ -18,7 +18,7 @@
                     <form asp-controller="Cart" asp-action="AddToCart" method="post">
                         <input type="hidden" name="productId" value="@Model.Id" />
                         <div class="input-group">
-                            <input type="number" name="quantity" class="form-control w-25" value="1" min="1" max="@Model.Quantity">
+                            <input type="number" name="quantity" class="form-control w-5" value="1" min="1" max="@Model.Quantity">
 
                         </div>
                     </form>
