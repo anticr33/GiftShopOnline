@@ -1,34 +1,71 @@
 ﻿@model GiftShop.Models.Order
 
 <div class="container mt-5">
-    <h2>Детайли за поръчка № @Model.Id</h2>
-    <p><strong>Дата:</strong> @Model.OrderDate</p>
-    <p><strong>Имейл на клиента:</strong> @ViewBag.UserEmail</p>
-    <p><strong>Име на клиента:</strong> @Model.FullName</p>
-    <p><strong>Адрес за доставка:</strong> @Model.ShippingAddress</p>
-    <p><strong>Телефон:</strong> @Model.PhoneNumber</p>
-    <p><strong>Метод на доставка:</strong> @Model.ShippingMethod</p>
-    <p><strong>Метод на плащане:</strong> @Model.PaymentMethod</p>
+    <div class="card shadow p-4">
+        <h2 class="text-center">Детайли за поръчка № @Model.Id</h2>
 
-    <h3>Продукти в поръчката:</h3>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <p><strong>📅 Дата:</strong> @Model.OrderDate</p>
+                <p><strong>📧 Имейл на клиента:</strong> @ViewBag.UserEmail</p>
+                <p><strong>👤 Име на клиента:</strong> @Model.FullName</p>
+                <p><strong>📍 Адрес за доставка:</strong> @Model.ShippingAddress</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>📞 Телефон:</strong> @Model.PhoneNumber</p>
+                <p>
+                    <strong>🚚 Куриер:</strong>
+                    @if (Model.ShippingMethod == "Econt")
+                    {
+                        <span>Еконт</span>
+                    }
+                    else if (Model.ShippingMethod == "Speedy")
+                    {
+                        <span>Спиди</span>
+                    }
+                    else
+                    {
+                        <span>@Model.ShippingMethod</span> <!-- За други куриери -->
+                    }
+                </p>
+                <p><strong>💰 Метод на плащане:</strong> Наложен платеж</p>
+            </div>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Продукт</th>
-                <th>Количество</th>
-                <th>Обща цена</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.OrderItems)
-            {
+        <h4 class="mt-4">🛒 Продукти в поръчката:</h4>
+        <table class="table table-striped mt-3">
+            <thead class="thead-dark">
                 <tr>
-                    <td>@item.Product.Name</td>
-                    <td>@item.Quantity</td>
-                    <td>@(item.Quantity * item.Product.Price) лв.</td>
+                    <th>Продукт</th>
+                    <th>Количество</th>
+                    <th>Цена за бр.</th>
+                    <th>Общо</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <tr>
+                        <td>
+                            <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="img-thumbnail" style="width: 50px; height: 50px;">
+                            @item.Product.Name
+                        </td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Product.Price лв.</td>
+                        <td>@(item.Quantity * item.Product.Price) лв.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="text-right mt-4">
+            <h4><strong>Обща сума: @(Model.OrderItems.Sum(i => i.Quantity * i.Product.Price)) лв.</strong></h4>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="@Url.Action("MyOrders", "Order")" class="btn btn-secondary">
+                ⬅ Върни се към поръчките
+            </a>
+        </div>
+    </div>
 </div>
