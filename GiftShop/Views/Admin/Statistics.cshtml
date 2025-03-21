@@ -1,26 +1,35 @@
-
 @model GiftShop.Models.StatisticsViewModel
 
 @{
     ViewData["Title"] = "Статистика";
+    var selectedFilter = Context.Request.Query["filter"].ToString();
+    var filters = new Dictionary<string, string>
+    {
+        { "day", "Днес" },
+        { "week", "Седмица" },
+        { "month", "Месец" },
+        { "custom", "От-до" }
+    };
 }
 
 <h2>Статистика</h2>
 
 <form method="get" class="mb-3">
     <label for="filter">Филтър:</label>
-    <select name="filter" class="form-select" id="filterSelect" onchange="toggleDateFields();">
-        <option value="day" selected>Днес</option>
-        <option value="week">Седмица</option>
-        <option value="month">Месец</option>
-        <option value="custom">От-до</option>
+    <select name="filter" class="form-select" id="filterSelect" onchange="this.form.submit(); toggleDateFields();">
+        @foreach (var filter in filters)
+        {
+            <option value="@filter.Key" selected="@(filter.Key == selectedFilter ? "selected" : null)">@filter.Value</option>
+        }
     </select>
 
     <div id="customDates" style="display: none;">
         <label for="startDate">От:</label>
-        <input type="date" name="startDate" id="startDate" class="form-control">
+        <input type="date" name="startDate" id="startDate" class="form-control"
+               value="@Context.Request.Query["startDate"]">
         <label for="endDate">До:</label>
-        <input type="date" name="endDate" id="endDate" class="form-control">
+        <input type="date" name="endDate" id="endDate" class="form-control"
+               value="@Context.Request.Query["endDate"]">
         <button type="submit" class="btn btn-primary mt-2">Филтрирай</button>
     </div>
 </form>
@@ -29,7 +38,7 @@
     function toggleDateFields() {
         var filter = document.getElementById("filterSelect").value;
         var dateFields = document.getElementById("customDates");
-        
+
         if (filter === "custom") {
             dateFields.style.display = "block";
         } else {
@@ -37,12 +46,10 @@
         }
     }
 
-    // Поддържа избора след презареждане на страницата
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         toggleDateFields();
     });
 </script>
-
 
 <h3>Оборот: @Model.TotalRevenue.ToString("C")</h3>
 <h3>Печалба: @Model.TotalProfit.ToString("C")</h3>
@@ -66,9 +73,3 @@
         }
     </tbody>
 </table>
-
-<script>
-document.querySelector("[name='filter']").addEventListener("change", function() {
-    document.getElementById("customDates").style.display = this.value === "custom" ? "block" : "none";
-});
-</script>
