@@ -1,28 +1,85 @@
 ﻿@model GiftShop.Models.CategoryViewModel
 @using X.PagedList.Mvc.Core
 
-<h2>@Model.Category.Name</h2>
+<h2 class="mb-4">@Model.Category.Name</h2>
 
-<div class="row">
+<div class="row g-3">
     @foreach (var product in Model.PagedProducts)
     {
-        <div class="col-md-3">
-            <div class="card">
+        <div class="col-6 col-md-3 product-card">
+            <div class="card shadow-sm h-100">
                 <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
-                <div class="card-body text-center">
-                    <h5 class="card-title">@product.Name</h5>
-                    <p class="card-text">@product.Description</p>
-                    <p class="card-text">
-                        <strong>@string.Format("{0:C}", product.Price)</strong>
-                    </p>
-                    <a href="/Buy/Product/@product.Id" class="btn btn-primary">Купи сега</a>
+                <div class="card-body text-center d-flex flex-column justify-content-between">
+                    <h6 class="card-title mb-1 text-truncate">@product.Name</h6>
+                    <p class="card-text small text-muted mb-1">@product.Description</p>
+                    <p class="card-text fw-bold mb-2">@string.Format("{0:C}", product.Price)</p>
+                    <a href="/Buy/Product/@product.Id" class="btn btn-outline-dark btn-sm">Купи сега</a>
                 </div>
             </div>
         </div>
     }
 </div>
 
-<!-- Добавяме бутони за странициране -->
-<div class="pagination-container">
+<div class="pagination-container mt-4">
     @Html.PagedListPager(Model.PagedProducts, page => Url.Action("Category", new { id = Model.Category.Id, pageNumber = page }))
 </div>
+
+<style>
+    .card-img-top {
+        width: 100%;
+        object-fit: cover;
+        border-bottom: 1px solid #eee;
+        transition: height 0.2s ease-in-out;
+    }
+
+    .card-body {
+        transition: all 0.2s ease-in-out;
+    }
+
+    .card-title,
+    .card-text,
+    .btn-sm {
+        transition: font-size 0.2s ease-in-out;
+    }
+</style>
+
+<script>
+    function adjustProductStyle() {
+        const isMobile = window.innerWidth < 768;
+        const productCards = document.querySelectorAll('.product-card');
+        const images = document.querySelectorAll('.card-img-top');
+        const bodies = document.querySelectorAll('.card-body');
+        const titles = document.querySelectorAll('.card-title');
+        const texts = document.querySelectorAll('.card-text');
+        const buttons = document.querySelectorAll('.btn-sm');
+
+        for (let i = 0; i < productCards.length; i++) {
+            if (isMobile) {
+                productCards[i].classList.remove("col-md-3");
+                productCards[i].classList.add("col-6");
+
+                images[i].style.height = "160px";
+                bodies[i].style.padding = "8px";
+                bodies[i].style.fontSize = "12px";
+                titles[i].style.fontSize = "13px";
+                texts[i].style.fontSize = "11px";
+                buttons[i].style.fontSize = "12px";
+                buttons[i].style.padding = "4px 10px";
+            } else {
+                productCards[i].classList.remove("col-6");
+                productCards[i].classList.add("col-md-3");
+
+                images[i].style.height = "250px";
+                bodies[i].style.padding = "16px";
+                bodies[i].style.fontSize = "14px";
+                titles[i].style.fontSize = "15px";
+                texts[i].style.fontSize = "13px";
+                buttons[i].style.fontSize = "14px";
+                buttons[i].style.padding = "6px 16px";
+            }
+        }
+    }
+
+    window.onload = adjustProductStyle;
+    window.onresize = adjustProductStyle;
+</script>

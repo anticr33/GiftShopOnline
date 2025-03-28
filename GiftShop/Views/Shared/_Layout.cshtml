@@ -19,16 +19,24 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GiftShop</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <!-- Контейнер за бутоните (мобилна версия) -->
+                <div class="d-flex align-items-center gap-2">
+                    <!-- Количка (само на мобилни устройства) -->
+                    <a href="/Cart/Index" class="d-md-none p-0 border-0 bg-transparent position-relative">
+                        <img src="/images/cart.png" alt="Количка" width="26" height="26" />
+
+                    </a>
+
+
+                    <!-- Бутон за мобилна навигация (трите черти) -->
+                    <button class="navbar-toggler order-last" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-
-                        </li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
@@ -38,12 +46,6 @@
                     </ul>
 
                     <div class="d-flex align-items-center gap-3">
-                        <!-- Количка -->
-                        <a class="btn btn-outline-dark d-flex align-items-center" asp-controller="Cart" asp-action="Index">
-                            <i class="fas fa-shopping-cart me-1"></i> Количка
-                            <span class="badge bg-danger ms-1">@ViewData["CartCount"]</span>
-                        </a>
-
                         @if (SignInManager.IsSignedIn(User))
                         {
                             <!-- Потребителско меню с падащо меню -->
@@ -55,8 +57,6 @@
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-controller="Order" asp-action="MyOrders">Моите поръчки</a>
                                     </li>
-                                    <li asp-area="Identity" asp-page="/Account/Logout" method="post">
-                                    </li>
                                 </ul>
                             </div>
 
@@ -67,6 +67,13 @@
                         }
                         else
                         {
+                            <!-- Количка (само на големи екрани) -->
+                            <a href="/Cart/Index" class="d-none d-md-flex p-0 border-0 bg-transparent">
+                                <img src="/images/cart.png" alt="Количка" width="26" height="26" />
+                            </a>
+
+
+                            <!-- Вход (преместен вдясно) -->
                             <a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Вход</a>
                         }
                     </div>

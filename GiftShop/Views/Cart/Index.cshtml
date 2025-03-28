@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<GiftShop.Models.CartItem>
 
-<div class="cart-container">
+<div class="cart-container" id="cartContainer">
     <h1 class="cart-title">Вашата количка</h1>
 
     @if (!Model.Any())
@@ -14,9 +14,10 @@
                 <thead>
                     <tr>
                         <th>Продукт</th>
-                        <th>Количество</th>
+                        <th>К-во</th>
                         <th>Цена</th>
                         <th>Общо</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,7 +26,7 @@
                         <tr>
                             <td class="product-info">
                                 <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="product-image" />
-                                <span>@item.Product.Name</span>
+                                <span class="product-name">@item.Product.Name</span>
                             </td>
                             <td>
                                 <input type="number" class="quantity-input" value="@item.Quantity" min="1" />
@@ -35,7 +36,7 @@
                             <td>
                                 <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button class="remove-btn">&#10006;</button>
+                                    <button class="remove-btn">✕</button>
                                 </form>
                             </td>
                         </tr>
@@ -45,84 +46,106 @@
 
             <div class="cart-summary">
                 <a asp-action="CreateOrder" asp-controller="Order" class="checkout-btn">Продължете към плащане</a>
+
             </div>
         </div>
     }
 </div>
 
 <style>
-.cart-container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-.cart-title {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-.cart-content {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-.cart-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-.cart-table th, .cart-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-.product-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.product-image {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-.quantity-input {
-    width: 50px;
-    padding: 5px;
-    text-align: center;
-}
-.remove-btn {
-    background: none;
-    border: none;
-    color: red;
-    font-size: 18px;
-    cursor: pointer;
-}
-.cart-summary {
-    padding: 15px;
-    background: #f8f8f8;
-    border-radius: 8px;
-}
-.cart-summary p {
-    display: flex;
-    justify-content: space-between;
-    font-size: 16px;
-}
-.total-price {
-    font-weight: bold;
-    font-size: 18px;
-}
-.checkout-btn {
-    display: block;
-    text-align: center;
-    padding: 10px;
-    background: black;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    margin-top: 10px;
-}
+    .cart-container {
+        width: 100%;
+        max-width: 100%;
+        margin: auto;
+        padding: 16px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        font-size: 14px;
+    }
+
+    .cart-title {
+        text-align: center;
+        font-size: 22px;
+        margin-bottom: 16px;
+    }
+
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .cart-table th, .cart-table td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    .product-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .product-image {
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    .product-name {
+        font-weight: 500;
+        max-width: 90px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .quantity-input {
+        width: 48px;
+        padding: 4px;
+        text-align: center;
+        font-size: 13px;
+    }
+
+    .remove-btn {
+        background: none;
+        border: none;
+        color: red;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    .cart-summary {
+        margin-top: 16px;
+    }
+
+    .checkout-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: #212529;
+        color: white;
+        text-align: center;
+        border-radius: 6px;
+        font-weight: bold;
+        text-decoration: none;
+    }
 </style>
+
+<script>
+    function adjustCartWidth() {
+        const cart = document.getElementById("cartContainer");
+        if (window.innerWidth >= 768) {
+            cart.style.maxWidth = "900px";  // Desktop
+        } else {
+            cart.style.maxWidth = "100%";   // Mobile
+        }
+    }
+
+    window.onload = adjustCartWidth;
+    window.onresize = adjustCartWidth;
+</script>

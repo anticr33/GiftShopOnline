@@ -1,33 +1,40 @@
 ﻿@model GiftShop.Models.Product
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-6 d-flex align-items-center">
-            <img src="@Model.ImageUrl" class="img-fluid rounded shadow" alt="@Model.Name" />
+<div class="container mt-4">
+    <div class="row gy-4">
+        <!-- Снимка на продукта -->
+        <div class="col-12 col-md-6 text-center">
+            <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.Name" style="max-height: 400px; object-fit: cover;" />
         </div>
-        <div class="col-md-6">
-            <h1 class="fw-bold mb-3">@Model.Name</h1>
-            <p class="fs-4 mb-3"><strong>Цена:</strong> @string.Format("{0:F2}", Model.Price) лв</p>
-            <h4 class="fw-bold">Описание</h4>
-            <p class="text-muted">@Model.Description</p>
-            <p class="fs-5 mb-3"><strong>Количество:</strong></p>
 
-            <div class="my-4 d-flex flex-column gap-3">
+        <!-- Информация за продукта -->
+        <div class="col-12 col-md-6">
+            <h2 class="fw-bold mb-3">@Model.Name</h2>
+
+            <p class="fs-5 mb-2">
+                <strong>Цена:</strong>
+                <span class="text-success">@string.Format("{0:F2}", Model.Price) лв</span>
+            </p>
+
+            <div class="mb-3">
+                <h5 class="fw-semibold mb-1">Описание</h5>
+                <p class="text-muted">@Model.Description</p>
+            </div>
+
+            <div class="mb-3">
+                <label for="quantity" class="form-label fw-semibold">Количество:</label>
                 @if (Model.Quantity > 0)
                 {
                     <form asp-controller="Cart" asp-action="AddToCart" method="post">
                         <input type="hidden" name="productId" value="@Model.Id" />
-                        <div class="input-group mb-3">
-                            <input type="number" name="quantity" class="form-control w-5" value="1" min="1" max="@Model.Quantity">
-                        </div>
-                        <button type="submit" class="btn btn-outline-dark btn-lg">Купи сега</button>
+                        <input type="number" name="quantity" class="form-control mb-3" id="quantity" value="1" min="1" max="@Model.Quantity" />
+
+                        <button type="submit" class="btn btn-outline-dark btn-sm">Купи сега</button>
                     </form>
-
-
                 }
                 else
                 {
-                    <button class="btn btn-danger btn-lg w-100" disabled>❌ Недостатъчна наличност</button>
+                    <button class="btn btn-danger w-100 btn-lg" disabled>❌ Изчерпано количество</button>
                 }
             </div>
         </div>
