@@ -1,48 +1,59 @@
 ﻿@model IEnumerable<GiftShop.Models.Order>
 
-<h2>Всички поръчки</h2> <a href="@Url.Action("CompletedOrders", "Admin")" class="btn btn-primary">Изпълнени поръчки</a>
+<h2>Всички поръчки</h2>
+<a href="@Url.Action("CompletedOrders", "Admin")" class="btn btn-primary mb-3">Изпълнени поръчки</a>
 
-
-<table class="table">
-    <thead>
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
         <tr>
             <th>#</th>
             <th>Дата</th>
             <th>Име на клиента</th>
             <th>Метод на плащане</th>
-            <th>Детайли</th>
+            <th>Потребител</th>
+            <th>Действия</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var order in Model)
+
         {
-            <tr>
-                <td>@order.Id</td>
-                <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
-                <td>@order.FullName</td>
-                <td>
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@order.FullName</td>
+                    <td>
                     @if (order.PaymentMethod == "CashOnDelivery")
+
                     {
-                        <span>Наложен платеж</span>
+                                <span>Наложен платеж</span>
                     }
+
                     else if (order.PaymentMethod == "Card")
+
                     {
-                        <span>Кредитна карта</span>
+                                <span>Кредитна карта</span>
                     }
+
                     else
+
                     {
-                        <span>@order.PaymentMethod</span> <!-- За всеки друг случай -->
+                                <span>@order.PaymentMethod</span>
                     }
-                </td>
-                <td>
-                <td>
-                    <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })" class="btn btn-info">Виж повече</a>
-                    <a href="@Url.Action("MarkAsCompleted", "Admin", new { id = order.Id })" class="btn btn-success">Поръчката е изпълнена</a>
+                    </td>
+                    <td>@(order.UserId == "Manual" ? "Ръчна поръчка" : order.UserId)</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })" class="btn btn-info btn-sm">Виж повече</a>
 
-                </td>
-                <td>@(order.UserId == "Manual" ? "Ръчна поръчка" : order.UserId)</td>
+                            <form asp-action="DeleteOrder" asp-controller="Admin" asp-route-id="@order.Id" method="post" style="display:inline;" onsubmit="return confirm('Сигурен ли си, че искаш да изтриеш поръчката?');">
+                                <button type="submit" class="btn btn-danger btn-sm">Изтрий</button>
+                            </form>
 
-            </tr>
+                            <a href="@Url.Action("MarkAsCompleted", "Admin", new { id = order.Id })" class="btn btn-success btn-sm">Поръчката е изпълнена</a>
+                        </div>
+                    </td>
+                </tr>
         }
     </tbody>
 </table>

@@ -1,16 +1,17 @@
 @model IEnumerable<GiftShop.Models.Product>
 
-<h2>Продукти</h2>
+<h2 class="mb-4">Продукти</h2>
 
-<a asp-action="CreateProduct" class="btn btn-success mb-3">Добави нов продукт</a>
-<!-- Търсачка -->
-<form method="get" asp-action="Index">
-    <input type="text" name="searchQuery" placeholder="Натисни control и f търсачката не работи" value="@Context.Request.Query["searchQuery"]" />
-    <button type="submit" class="btn btn-primary">Търси</button>
-</form>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a asp-action="CreateProduct" class="btn btn-success">➕ Добави нов продукт</a>
 
-<table class="table">
-    <thead>
+    <form method="get" asp-action="Index" class="d-flex">
+
+    </form>
+</div>
+
+<table class="table table-striped table-bordered align-middle text-center">
+    <thead class="table-dark">
         <tr>
             <th>SKU</th>
             <th>Име</th>
@@ -19,12 +20,11 @@
             <th>Количество</th>
             <th>Категория</th>
             <th>Снимка</th>
-            <th>Действия</th>
+            <th colspan="2">Действия</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var product in Model)
-
         {
             <tr>
                 <td>@product.SKU</td>
@@ -34,19 +34,19 @@
                 <td>@product.Quantity</td>
                 <td>@product.Category?.Name</td>
                 <td>
-                    <img src="@product.ImageUrl" alt="@product.Name" style="width: 100px; height: auto;" />
+                    <img src="@product.ImageUrl" alt="@product.Name" style="width: 80px; height: auto;" class="rounded border" />
                 </td>
                 <td>
-                    <form asp-controller="Products" asp-action="UpdateQuantity" method="post">
-                        <input type="hidden" name="id" value="@product.Id" />
-                        <input type="number" name="quantity" min="1" placeholder="Добави количество" required />
-                        <button type="submit" class="btn btn-success">Добави количество</button>
-                    </form>
-                <td>
-                <td>
-                    <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-warning">Редактиране</a>
+                    <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-warning btn-sm mb-1">✏️ Редактирай</a>
                     <form asp-action="DeleteProductConfirmed" asp-route-id="@product.Id" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Изтриване</button>
+                        <button type="submit" class="btn btn-danger btn-sm">🗑️ Изтрий</button>
+                    </form>
+                </td>
+                <td>
+                    <form asp-controller="Products" asp-action="UpdateQuantity" method="post" class="d-flex flex-column">
+                        <input type="hidden" name="id" value="@product.Id" />
+                        <input type="number" name="quantity" min="1" class="form-control mb-1" placeholder="Бройка" required />
+                        <button type="submit" class="btn btn-success btn-sm">➕ Добави</button>
                     </form>
                 </td>
             </tr>

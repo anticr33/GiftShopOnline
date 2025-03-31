@@ -207,8 +207,9 @@ public class AdminController : Controller
         product.Name = model.Name;
         product.Description = model.Description;
         product.Price = model.Price;
+        product.PurchasePrice = model.PurchasePrice; 
+        product.SKU = model.SKU;                     
         product.CategoryId = model.CategoryId;
-
 
         if (ImageFile != null && ImageFile.Length > 0)
         {
@@ -228,6 +229,7 @@ public class AdminController : Controller
 
         return RedirectToAction("Products");
     }
+
 
 
     public IActionResult DeleteProduct(int id)
@@ -298,6 +300,20 @@ public class AdminController : Controller
         }
         return RedirectToAction("Products");
     }
+    [HttpPost]
+    public IActionResult DeleteOrder(int id)
+    {
+        var order = _context.Orders.FirstOrDefault(o => o.Id == id);
+        if (order == null)
+            return NotFound();
+
+        _context.Orders.Remove(order);
+        _context.SaveChanges();
+
+        return RedirectToAction("Orders");
+    }
 }
 
+
    
+

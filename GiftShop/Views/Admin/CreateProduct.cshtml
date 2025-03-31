@@ -1,56 +1,65 @@
 @model GiftShop.Models.Product
 
-<h1>Добави продукт</h1>
+<h2 class="mb-4"> Добави нов продукт</h2>
 
-<form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-        <label for="Name">Име на продукта</label>
-        <input asp-for="Name" class="form-control" id="Name" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+<div class="card shadow p-4">
+    <form asp-action="CreateProduct" asp-controller="Admin" method="post" enctype="multipart/form-data">
 
-    <div class="form-group">
-        <label for="Description">Описание</label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label">Име на продукта</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger small"></span>
+        </div>
 
-    <div class="form-group">
-        <label for="Price">Цена (лв.)</label>
-        <input asp-for="Price" type="number" step="0.01" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label">Описание</label>
+            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="Description" class="text-danger small"></span>
+        </div>
 
-    <div class="form-group">
-        <label for="PurchasePrice">Цена на покупка (лв.)</label>
-        <input asp-for="PurchasePrice" type="number" step="0.01" class="form-control" />
-        <span asp-validation-for="PurchasePrice" class="text-danger"></span>
-    </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Price" class="form-label">Цена (лв.)</label>
+                <input asp-for="Price" type="number" step="0.01" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger small"></span>
+            </div>
 
+            <div class="col-md-6 mb-3">
+                <label asp-for="PurchasePrice" class="form-label">Цена на покупка (лв.)</label>
+                <input asp-for="PurchasePrice" type="number" step="0.01" class="form-control" />
+                <span asp-validation-for="PurchasePrice" class="text-danger small"></span>
+            </div>
+        </div>
 
-    <div class="form-group">
-        <label for="CategoryId">Категория</label>
-        <select asp-for="CategoryId" class="form-control">
-            <option value="">-- Избери категория --</option>
-            @foreach (var category in ViewBag.Categories as IEnumerable<GiftShop.Models.Category>)
-            {
-                <option value="@category.Id">@category.Name</option>
-            }
-        </select>
-        <span asp-validation-for="CategoryId" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label for="CategoryId">Категория</label>
+            <select asp-for="CategoryId" class="form-select" required>
+                <option value="">-- Избери категория --</option>
+                @foreach (var category in ViewBag.Categories as IEnumerable<GiftShop.Models.Category>)
 
-    <div class="form-group">
-        <label for="ImageFile">Качване на изображение</label>
-        <input type="file" name="ImageFile" class="form-control-file" />
-    </div>
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger small"></span>
 
+        </div>
 
+        <div class="mb-3">
+            <label for="ImageFile" class="form-label">Качи изображение</label>
+            <input type="file" name="ImageFile" class="form-control" />
+        </div>
 
-    <div class="form-group">
-        <label for="SKU">SKU номер</label>
-        <input asp-for="SKU" class="form-control" required />
-    </div>
+        <div class="mb-4">
+            <label asp-for="SKU" class="form-label">SKU номер</label>
+            <input asp-for="SKU" class="form-control" />
+            <span asp-validation-for="SKU" class="text-danger small"></span>
+        </div>
 
-    <button asp-action="CreateProduct" type="submit" class="btn btn-primary">Добави продукт</button>
-</form>
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Добави продукт</button>
+
+            <a asp-action="Products" asp-controller="Admin" class="btn btn-secondary">Назад</a>
+        </div>
+    </form>
+</div>
