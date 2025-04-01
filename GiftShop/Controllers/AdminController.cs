@@ -145,30 +145,28 @@ public class AdminController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction("Products");
     }
-    [HttpPost]
-    public IActionResult CompleteOrder(int id)
+    public IActionResult CompletedOrders(int page = 1)
     {
-        var order = _context.Orders.FirstOrDefault(o => o.Id == id);
-        if (order == null)
-        {
-            return NotFound();
-        }
+        int pageSize = 20;
 
-        order.IsCompleted = true;
-        _context.SaveChanges();
-
-        return RedirectToAction("Orders"); // Връща към списъка с поръчки
-    }
-
-    public IActionResult CompletedOrders()
-    {
-        var completedOrders = _context.Orders
+        var query = _context.Orders
             .Where(o => o.IsCompleted)
-            .OrderByDescending(o => o.OrderDate)
+            .OrderByDescending(o => o.OrderDate);
+
+        int totalOrders = query.Count();
+        int totalPages = (int)Math.Ceiling(totalOrders / (double)pageSize);
+
+        var orders = query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .ToList();
 
-        return View(completedOrders);
+        ViewBag.CurrentPage = page;
+        ViewBag.TotalPages = totalPages;
+
+        return View(orders);
     }
+
     public IActionResult MarkAsCompleted(int id)
     {
         var order = _context.Orders.Find(id);

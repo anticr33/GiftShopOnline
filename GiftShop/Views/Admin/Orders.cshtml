@@ -1,59 +1,75 @@
 ﻿@model IEnumerable<GiftShop.Models.Order>
 
-<h2>Всички поръчки</h2>
-<a href="@Url.Action("CompletedOrders", "Admin")" class="btn btn-primary mb-3">Изпълнени поръчки</a>
+<h2 class="mb-4">Всички поръчки</h2>
 
-<table class="table table-striped table-bordered">
-    <thead class="thead-dark">
+<div class="mb-3">
+    <a href="@Url.Action("CompletedOrders", "Admin")" class="btn btn-outline-primary">
+        <i class="bi bi-check2-circle"></i> Изпълнени поръчки
+    </a>
+</div>
+
+<table class="table table-hover table-bordered align-middle shadow-sm">
+    <thead class="table-dark">
         <tr>
-            <th>#</th>
-            <th>Дата</th>
-            <th>Име на клиента</th>
-            <th>Метод на плащане</th>
-            <th>Потребител</th>
-            <th>Действия</th>
+            <th scope="col">#</th>
+            <th scope="col">Дата</th>
+            <th scope="col">Име на клиента</th>
+            <th scope="col">Метод на плащане</th>
+            <th scope="col">Потребител</th>
+            <th scope="col">Действия</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var order in Model)
-
         {
-                <tr>
-                    <td>@order.Id</td>
-                    <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
-                    <td>@order.FullName</td>
-                    <td>
-                    @if (order.PaymentMethod == "CashOnDelivery")
-
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@order.FullName</td>
+                <td>
+                    @switch (order.PaymentMethod)
                     {
-                                <span>Наложен платеж</span>
+                        case "CashOnDelivery":
+                            <span class="badge bg-warning text-dark">Наложен платеж</span>
+                            break;
+                        case "Card":
+                            <span class="badge bg-info text-dark">Кредитна карта</span>
+                            break;
+                        default:
+                            <span class="badge bg-secondary">@order.PaymentMethod</span>
+                            break;
                     }
+                </td>
+                <td>
+                    @(order.UserId == "Manual"
+                        ? "<span class='badge bg-light text-dark'>Ръчна поръчка</span>"
+                        : order.UserId)
+                </td>
+                <td>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })"
+                           class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-eye"></i> Виж повече
+                        </a>
 
-                    else if (order.PaymentMethod == "Card")
+                        <form asp-action="DeleteOrder"
+                              asp-controller="Admin"
+                              asp-route-id="@order.Id"
+                              method="post"
+                              onsubmit="return confirm('Сигурен ли си, че искаш да изтриеш поръчката?');"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i> Изтрий
+                            </button>
+                        </form>
 
-                    {
-                                <span>Кредитна карта</span>
-                    }
-
-                    else
-
-                    {
-                                <span>@order.PaymentMethod</span>
-                    }
-                    </td>
-                    <td>@(order.UserId == "Manual" ? "Ръчна поръчка" : order.UserId)</td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })" class="btn btn-info btn-sm">Виж повече</a>
-
-                            <form asp-action="DeleteOrder" asp-controller="Admin" asp-route-id="@order.Id" method="post" style="display:inline;" onsubmit="return confirm('Сигурен ли си, че искаш да изтриеш поръчката?');">
-                                <button type="submit" class="btn btn-danger btn-sm">Изтрий</button>
-                            </form>
-
-                            <a href="@Url.Action("MarkAsCompleted", "Admin", new { id = order.Id })" class="btn btn-success btn-sm">Поръчката е изпълнена</a>
-                        </div>
-                    </td>
-                </tr>
+                        <a href="@Url.Action("MarkAsCompleted", "Admin", new { id = order.Id })"
+                           class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-check2"></i> Маркирай като изпълнена
+                        </a>
+                    </div>
+                </td>
+            </tr>
         }
     </tbody>
 </table>

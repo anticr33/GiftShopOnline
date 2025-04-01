@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<GiftShop.Models.Order>
 
-<h2>Изпълнени поръчки</h2>
+<h2 class="mb-4">Изпълнени поръчки</h2>
 
-<table class="table">
-    <thead>
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
         <tr>
             <th>#</th>
             <th>Дата</th>
@@ -19,11 +19,34 @@
                 <td>@order.Id</td>
                 <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
                 <td>@order.FullName</td>
-                <td>@(order.PaymentMethod == "Card" ? "Кредитна карта" : "Наложен платеж")</td>
                 <td>
-                    <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })" class="btn btn-info">Виж повече</a>
+                    @if (order.PaymentMethod == "Card")
+                    {
+                        <span class="badge bg-info text-dark">Кредитна карта</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning text-dark">Наложен платеж</span>
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("OrderDetails", "Admin", new { id = order.Id })" class="btn btn-sm btn-outline-primary">
+                        Виж повече
+                    </a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<!-- Странициране -->
+<nav aria-label="Поръчки страници">
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
+        {
+            <li class="page-item @(i == (int)ViewBag.CurrentPage ? "active" : "")">
+                <a class="page-link" href="@Url.Action("CompletedOrders", "Admin", new { page = i })">@i</a>
+            </li>
+        }
+    </ul>
+</nav>

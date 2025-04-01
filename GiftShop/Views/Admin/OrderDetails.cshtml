@@ -4,21 +4,40 @@
     ViewData["Title"] = "Детайли за поръчка";
 }
 
-<h2>Детайли за поръчка № @Model.Id</h2>
+<h2 class="mb-4">Детайли за поръчка № @Model.Id</h2>
 
-<p><strong>Дата:</strong> @Model.OrderDate</p>
+<div class="card shadow-sm p-4 mb-4">
+    <div class="row mb-2">
+        <div class="col-md-6"><strong>Дата:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</div>
+        <div class="col-md-6"><strong>Имейл на клиента:</strong> @ViewBag.UserEmail</div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-md-6"><strong>Име на клиента:</strong> @Model.FullName</div>
+        <div class="col-md-6"><strong>Телефон:</strong> @Model.PhoneNumber</div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-md-6"><strong>Адрес за доставка:</strong> @Model.ShippingAddress</div>
+        <div class="col-md-6"><strong>Метод на доставка:</strong> @Model.ShippingMethod</div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <strong>Метод на плащане:</strong>
+            @if (Model.PaymentMethod == "Card")
+            {
+                <span class="badge bg-info text-dark">Кредитна карта</span>
+            }
+            else
+            {
+                <span class="badge bg-warning text-dark">Наложен платеж</span>
+            }
+        </div>
+    </div>
+</div>
 
-<p><strong>Имейл на клиента:</strong> @ViewBag.UserEmail</p>
-<p><strong>Име на клиента:</strong> @Model.FullName</p>
-<p><strong>Адрес за доставка:</strong> @Model.ShippingAddress</p>
-<p><strong>Телефон:</strong> @Model.PhoneNumber</p>
-<p><strong>Метод на доставка:</strong> @Model.ShippingMethod</p>
-<p><strong>Метод на плащане:</strong> @Model.PaymentMethod</p>
+<h4 class="mb-3">Продукти в поръчката</h4>
 
-<h3>Продукти в поръчката:</h3>
-
-<table class="table">
-    <thead>
+<table class="table table-bordered table-hover shadow-sm">
+    <thead class="table-light">
         <tr>
             <th>Продукт</th>
             <th>Количество</th>
@@ -31,8 +50,10 @@
             <tr>
                 <td>@item.Product.Name</td>
                 <td>@item.Quantity</td>
-                <td>@string.Format("{0:C}", item.Quantity * item.Product.Price)</td>
+                <td>@string.Format("{0:F2} лв.", item.Quantity * item.Product.Price)</td>
             </tr>
         }
     </tbody>
 </table>
+
+<a href="@Url.Action("Orders", "Admin")" class="btn btn-secondary mt-3">⬅ Назад към поръчките</a>

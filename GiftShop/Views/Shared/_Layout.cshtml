@@ -19,16 +19,13 @@
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GiftShop</a>
 
-                <!-- Контейнер за бутоните (мобилна версия) -->
                 <div class="d-flex align-items-center gap-2">
-                    <!-- Количка (само на мобилни устройства) -->
+                    <!-- Количка (мобилна версия) -->
                     <a href="/Cart/Index" class="d-md-none p-0 border-0 bg-transparent position-relative">
                         <img src="/images/cart.png" alt="Количка" width="26" height="26" />
-
                     </a>
 
-
-                    <!-- Бутон за мобилна навигация (трите черти) -->
+                    <!-- Мобилно меню (бургер бутон) -->
                     <button class="navbar-toggler order-last" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
                             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -46,9 +43,14 @@
                     </ul>
 
                     <div class="d-flex align-items-center gap-3">
+                        <!-- Количка (винаги показвана на десктоп) -->
+                        <a href="/Cart/Index" class="d-none d-md-flex p-0 border-0 bg-transparent">
+                            <img src="/images/cart.png" alt="Количка" width="26" height="26" />
+                        </a>
+
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            <!-- Потребителско меню с падащо меню -->
+                            <!-- Падащо меню за потребителя -->
                             <div class="dropdown">
                                 <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" id="userDropdown" data-bs-toggle="dropdown">
                                     <i class="fas fa-user-circle me-1"></i> @User.Identity.Name
@@ -67,13 +69,7 @@
                         }
                         else
                         {
-                            <!-- Количка (само на големи екрани) -->
-                            <a href="/Cart/Index" class="d-none d-md-flex p-0 border-0 bg-transparent">
-                                <img src="/images/cart.png" alt="Количка" width="26" height="26" />
-                            </a>
-
-
-                            <!-- Вход (преместен вдясно) -->
+                            <!-- Вход -->
                             <a class="btn btn-outline-primary" asp-area="Identity" asp-page="/Account/Login">Вход</a>
                         }
                     </div>
