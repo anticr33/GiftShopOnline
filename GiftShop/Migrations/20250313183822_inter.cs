@@ -13,18 +13,17 @@ namespace GiftShop.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Admins",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Admins", x => x.Id);
-                });
+            // Изпълняваме SQL команда, която проверява дали таблицата Admins съществува
+            migrationBuilder.Sql(@"
+                IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Admins')
+                BEGIN
+                    CREATE TABLE [Admins] (
+                        [Id] int NOT NULL IDENTITY(1,1),
+                        [Email] nvarchar(max) NOT NULL,
+                        CONSTRAINT [PK_Admins] PRIMARY KEY ([Id])
+                    )
+                END
+            ");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",

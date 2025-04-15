@@ -22,7 +22,7 @@
                     </td>
                     <td>@item.Quantity</td>
                     <td>@item.Product.Price.ToString("C")</td>
-                    <td>@(item.Quantity * item.Product.Price)</td>
+                    <td>@((item.Quantity * item.Product.Price + 5).ToString("C"))</td>
                 </tr>
             }
         </tbody>
@@ -45,7 +45,6 @@
         <div class="form-group">
             <label for="shippingMethod">Метод на доставка</label>
             <select id="shippingMethod" name="shippingMethod" class="form-control" required>
-                <option value="Econt">Еконт</option>
                 <option value="Speedy">Спиди</option>
             </select>
         </div>

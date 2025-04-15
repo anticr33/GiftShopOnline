@@ -30,6 +30,13 @@ namespace GiftShop.Controllers
                 return NotFound("Продуктът не е намерен.");
             }
 
+            if (quantity > product.Quantity)
+            {
+                TempData["ErrorMessage"] = $"Налични са само {product.Quantity} броя от този продукт.";
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
+
             string userId = _userManager.GetUserId(User);
             string sessionId = Request.Cookies["GuestSessionId"] ?? Guid.NewGuid().ToString();
 
@@ -38,14 +45,16 @@ namespace GiftShop.Controllers
                 Response.Cookies.Append("GuestSessionId", sessionId, new CookieOptions { Expires = DateTime.Now.AddDays(7) });
             }
 
-            var cartItem = await _context.CartItems.FirstOrDefaultAsync(c => c.ProductId == productId && (c.UserId == userId || c.SessionId == sessionId));
+            var cartItem = await _context.CartItems.FirstOrDefaultAsync(c =>
+                c.ProductId == productId && (c.UserId == userId || c.SessionId == sessionId));
+
             if (cartItem == null)
             {
                 cartItem = new CartItem
                 {
                     ProductId = productId,
                     Quantity = quantity,
-                    UserId = userId, // Може да е null за гости
+                    UserId = userId,
                     SessionId = sessionId
                 };
                 _context.CartItems.Add(cartItem);
@@ -58,6 +67,7 @@ namespace GiftShop.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("Index", "Cart");
         }
+
 
         public async Task<IActionResult> Index()
         {

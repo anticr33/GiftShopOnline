@@ -1,7 +1,6 @@
 ﻿@model GiftShop.Models.CategoryViewModel
 @using X.PagedList.Mvc.Core
 
-<h2 class="mb-4">@Model.Category.Name</h2>
 
 <div class="row g-3">
     @foreach (var product in Model.PagedProducts)
@@ -11,8 +10,9 @@
                 <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
                 <div class="card-body text-center d-flex flex-column justify-content-between">
                     <h6 class="card-title mb-1 text-truncate">@product.Name</h6>
-                    <p class="card-text small text-muted mb-1">@product.Description</p>
-                    <p class="card-text fw-bold mb-2">@string.Format("{0:C}", product.Price)</p>
+                    <p class="card-text fw-bold mb-2">
+                        @product.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("bg-BG"))
+                    </p>
                     <a href="/Buy/Product/@product.Id" class="btn btn-outline-dark btn-sm">Купи сега</a>
                 </div>
             </div>

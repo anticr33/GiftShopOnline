@@ -2,77 +2,84 @@
     ViewData["Title"] = "Home Page";
 }
 
+<style>
+    #heroCarousel {
+        width: 100%;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .carousel-inner {
+        width: 100%;
+        max-height: 900px; /* колкото е височината на изображението */
+    }
+
+    .carousel-inner img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+
 <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="/images/discount.png" class="d-block w-100" alt="Кутия">
+            <img class="d-block hero-slide"
+                 data-desktop="/images/tttt.png"
+                 data-mobile="/images/tttt.png"
+                 alt="Термос">
         </div>
-        <div class="carousel-item">
-            <img src="/images/podaruk2.jfif" class="d-block w-100" alt="подарък2">
+        <div class="carousel-item position-relative">
+            <img class="d-block w-100 hero-slide"
+                 data-desktop="/images/rek6.png"
+                 data-mobile="/images/rek2.jpg"
+                 alt="Реклама">
+            <!-- За десктоп -->
+            <a href="/Home/Wholesale"
+               class="btn btn-dark position-absolute d-none d-md-inline"
+               style="bottom: 30px; right: 580px;">
+                Научи повече
+            </a>
+
+            <!-- За мобилен -->
+            <a href="/Home/Wholesale"
+               class="btn btn-dark position-absolute d-inline d-md-none"
+               style="bottom: 10px; right: 220px;">
+                Научи повече
+            </a>
+
         </div>
-        <div class="carousel-item">
-            <img src="/images/slide3.jpg" class="d-block w-100" alt="Slide 3">
-        </div>
+
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
+        <span class="visually-hidden">Назад</span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
+        <span class="visually-hidden">Напред</span>
     </button>
 </div>
 
 <script>
-    function adjustCarouselHeight() {
-        const carousel = document.getElementById("heroCarousel");
-        const images = carousel.getElementsByTagName("img");
+    function updateHeroImages() {
+        const isMobile = window.innerWidth < 768;
+        const images = document.querySelectorAll(".hero-slide");
 
-        if (window.innerWidth < 768) {
-            carousel.style.height = "275px";
-            for (let i = 0; i < images.length; i++) {
-                images[i].style.height = "275px";
-                images[i].style.objectFit = "cover";
-            }
-        } else {
-            carousel.style.height = "550px";
-            for (let i = 0; i < images.length; i++) {
-                images[i].style.height = "550px";
-                images[i].style.objectFit = "cover";
-            }
-        }
+        images.forEach(img => {
+            const src = isMobile ? img.getAttribute("data-mobile") : img.getAttribute("data-desktop");
+            img.src = src;
+        });
     }
 
-    function adjustCategorySize() {
-        const cards = document.querySelectorAll(".card");
-        const images = document.querySelectorAll(".card-img-top");
-        const bodies = document.querySelectorAll(".card-body");
-
-        for (let i = 0; i < cards.length; i++) {
-            if (window.innerWidth < 768) {
-                images[i].style.height = "180px";
-                images[i].style.objectFit = "cover";
-                bodies[i].style.padding = "8px";
-                bodies[i].style.fontSize = "14px";
-            } else {
-                images[i].style.height = "440px";
-                bodies[i].style.padding = "20px";
-                bodies[i].style.fontSize = "16px";
-            }
-        }
-    }
-
-    window.onload = function () {
-        adjustCarouselHeight();
-        adjustCategorySize();
-    };
-
-    window.onresize = function () {
-        adjustCarouselHeight();
-        adjustCategorySize();
-    };
+    window.addEventListener("load", updateHeroImages);
+    window.addEventListener("resize", updateHeroImages);
 </script>
+
+
 
 <div class="spacer"></div>
 
@@ -143,6 +150,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script>
     function adjustCarouselHeight() {

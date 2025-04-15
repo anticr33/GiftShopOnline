@@ -1,6 +1,18 @@
 ﻿@model IEnumerable<GiftShop.Models.CartItem>
 
-<div class="cart-container" id="cartContainer">
+@{
+    decimal subtotal = 0;
+    foreach (var item in Model)
+    {
+        subtotal += item.Product.Price * item.Quantity;
+    }
+
+    decimal delivery = 5;
+    decimal discount = 0; // Добави логика при нужда
+    decimal total = subtotal - discount + delivery;
+}
+
+<div class="cart-container">
     <h1 class="cart-title">Вашата количка</h1>
 
     @if (!Model.Any())
@@ -14,10 +26,10 @@
                 <thead>
                     <tr>
                         <th>Продукт</th>
-                        <th>К-во</th>
+                        <th>Количество</th>
                         <th>Цена</th>
                         <th>Общо</th>
-                        <th></th>
+                        <th>Действия</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -26,17 +38,17 @@
                         <tr>
                             <td class="product-info">
                                 <img src="@item.Product.ImageUrl" alt="@item.Product.Name" class="product-image" />
-                                <span class="product-name">@item.Product.Name</span>
+                                <span>@item.Product.Name</span>
                             </td>
                             <td>
                                 <input type="number" class="quantity-input" value="@item.Quantity" min="1" />
                             </td>
-                            <td>@item.Product.Price.ToString("C")</td>
-                            <td>@(item.Quantity * item.Product.Price)</td>
+                            <td>@item.Product.Price.ToString("F2") лв.</td>
+                            <td>@(item.Quantity * item.Product.Price) лв.</td>
                             <td>
                                 <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
                                     <input type="hidden" name="id" value="@item.Id" />
-                                    <button class="remove-btn">✕</button>
+                                    <button class="remove-btn">&#10006;</button>
                                 </form>
                             </td>
                         </tr>
@@ -45,8 +57,11 @@
             </table>
 
             <div class="cart-summary">
+                <h2>Обобщение на поръчката</h2>
+                <p>Междинна сума: <span>@subtotal.ToString("F2") лв.</span></p>
+                <p>Доставка: <span>@delivery.ToString("F2") лв.</span></p>
+                <p class="total-price">Крайна сума: <span>@total.ToString("F2") лв.</span></p>
                 <a asp-action="CreateOrder" asp-controller="Order" class="checkout-btn">Продължете към плащане</a>
-
             </div>
         </div>
     }
@@ -54,20 +69,19 @@
 
 <style>
     .cart-container {
-        width: 100%;
-        max-width: 100%;
+        max-width: 900px;
         margin: auto;
-        padding: 16px;
+        padding: 20px;
         background: #fff;
         border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        font-size: 14px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        font-family: sans-serif;
     }
 
     .cart-title {
         text-align: center;
-        font-size: 22px;
-        margin-bottom: 16px;
+        font-size: 24px;
+        margin-bottom: 20px;
     }
 
     .cart-table {
@@ -75,11 +89,11 @@
         border-collapse: collapse;
     }
 
-        .cart-table th, .cart-table td {
-            padding: 6px;
-            border-bottom: 1px solid #ddd;
+        .cart-table th,
+        .cart-table td {
+            padding: 12px;
             text-align: center;
-            vertical-align: middle;
+            border-bottom: 1px solid #ddd;
         }
 
     .product-info {
@@ -90,25 +104,16 @@
     }
 
     .product-image {
-        width: 42px;
-        height: 42px;
+        width: 50px;
+        height: 50px;
         object-fit: cover;
-        border-radius: 4px;
-    }
-
-    .product-name {
-        font-weight: 500;
-        max-width: 90px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        border-radius: 5px;
     }
 
     .quantity-input {
-        width: 48px;
-        padding: 4px;
+        width: 50px;
+        padding: 6px;
         text-align: center;
-        font-size: 13px;
     }
 
     .remove-btn {
@@ -120,32 +125,85 @@
     }
 
     .cart-summary {
-        margin-top: 16px;
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f8f8;
+        border-radius: 8px;
+        font-size: 16px;
     }
 
+        .cart-summary p {
+            display: flex;
+            justify-content: space-between;
+            margin: 6px 0;
+        }
+
+        .cart-summary .total {
+            font-weight: bold;
+            font-size: 18px;
+            color: green;
+        }
+
     .checkout-btn {
+        margin-top: 15px;
         display: block;
         width: 100%;
         padding: 12px;
-        background: #212529;
+        background-color: #000;
         color: white;
-        text-align: center;
-        border-radius: 6px;
         font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        text-align: center;
         text-decoration: none;
+    }
+
+    body.mobile-cart .cart-container {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    body.mobile-cart .cart-title {
+        font-size: 20px;
+    }
+
+    body.mobile-cart .cart-table th,
+    body.mobile-cart .cart-table td {
+        padding: 6px;
+        font-size: 13px;
+    }
+
+    body.mobile-cart .product-image {
+        width: 42px;
+        height: 42px;
+    }
+
+    body.mobile-cart .quantity-input {
+        width: 40px;
+        padding: 4px;
+    }
+
+    body.mobile-cart .cart-summary {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    body.mobile-cart .checkout-btn {
+        font-size: 14px;
+        padding: 10px;
     }
 </style>
 
 <script>
-    function adjustCartWidth() {
-        const cart = document.getElementById("cartContainer");
-        if (window.innerWidth >= 768) {
-            cart.style.maxWidth = "900px";  // Desktop
+    function applyMobileCartStyles() {
+        if (window.innerWidth < 768) {
+            document.body.classList.add('mobile-cart');
         } else {
-            cart.style.maxWidth = "100%";   // Mobile
+            document.body.classList.remove('mobile-cart');
         }
     }
 
-    window.onload = adjustCartWidth;
-    window.onresize = adjustCartWidth;
+    window.onload = applyMobileCartStyles;
+    window.onresize = applyMobileCartStyles;
 </script>
+

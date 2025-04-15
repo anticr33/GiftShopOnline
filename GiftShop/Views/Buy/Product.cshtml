@@ -2,6 +2,7 @@
 
 <div class="container mt-4">
     <div class="row gy-4">
+
         <!-- Снимка на продукта -->
         <div class="col-12 col-md-6 text-center">
             <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.Name" style="max-height: 400px; object-fit: cover;" />
@@ -21,14 +22,21 @@
                 <p class="text-muted">@Model.Description</p>
             </div>
 
+            <!-- 🔔 Грешка от сървъра -->
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
             <div class="mb-3">
                 <label for="quantity" class="form-label fw-semibold">Количество:</label>
                 @if (Model.Quantity > 0)
                 {
                     <form asp-controller="Cart" asp-action="AddToCart" method="post">
                         <input type="hidden" name="productId" value="@Model.Id" />
-                        <input type="number" name="quantity" class="form-control mb-3" id="quantity" value="1" min="1" max="@Model.Quantity" />
-
+                        <input type="number" name="quantity" class="form-control mb-3" id="quantity" value="1" min="1" />
                         <button type="submit" class="btn btn-outline-dark btn-sm">Купи сега</button>
                     </form>
                 }

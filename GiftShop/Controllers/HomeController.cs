@@ -37,10 +37,15 @@ namespace GiftShop.Controllers
         }
 
         // Страница за поверителност
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult Privacy() => View();
+        public IActionResult Terms() => View();            // Общи условия
+        public IActionResult Returns() => View();          // Политика за връщане
+        public IActionResult Delivery() => View();         // Доставка
+        public IActionResult Cookies() => View();          // Политика за бисквитки
+        public IActionResult Contacts() => View();         // Политика за сигурност
+        public IActionResult FAQ() => View();              // Често задавани въпроси
+        public IActionResult Wholesale() => View();
+
 
         // Грешка
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
