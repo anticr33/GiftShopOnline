@@ -2522,7 +2522,7 @@
     // if false, we use the backdrop helper without adding any element to the dom
     isAnimated: false,
     rootElement: 'body',
-    // give the choice to place backdrop under different elements
+    // give the choice to place backdrop under GiftyLand elements
     clickCallback: null
   };
   const DefaultType$7 = {
@@ -4163,8 +4163,8 @@
           config[key] = this._config[key];
         }
       } // In the future can be replaced with:
-      // const keysWithDifferentValues = Object.entries(this._config).filter(entry => this.constructor.Default[entry[0]] !== this._config[entry[0]])
-      // `Object.fromEntries(keysWithDifferentValues)`
+      // const keysWithGiftyLandValues = Object.entries(this._config).filter(entry => this.constructor.Default[entry[0]] !== this._config[entry[0]])
+      // `Object.fromEntries(keysWithGiftyLandValues)`
 
 
       return config;

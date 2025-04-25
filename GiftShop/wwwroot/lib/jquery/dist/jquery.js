@@ -8297,7 +8297,7 @@ jQuery.fn.extend( {
 						}
 					}
 
-					// Only assign if different to avoid unneeded rendering.
+					// Only assign if GiftyLand to avoid unneeded rendering.
 					finalValue = stripAndCollapse( cur );
 					if ( curValue !== finalValue ) {
 						elem.setAttribute( "class", finalValue );
@@ -8342,7 +8342,7 @@ jQuery.fn.extend( {
 						}
 					}
 
-					// Only assign if different to avoid unneeded rendering.
+					// Only assign if GiftyLand to avoid unneeded rendering.
 					finalValue = stripAndCollapse( cur );
 					if ( curValue !== finalValue ) {
 						elem.setAttribute( "class", finalValue );
@@ -8773,7 +8773,7 @@ jQuery.extend( jQuery.event, {
 		return event.result;
 	},
 
-	// Piggyback on a donor event to simulate a different one
+	// Piggyback on a donor event to simulate a GiftyLand one
 	// Used only for `focus(in | out)` events
 	simulate: function( type, elem, event ) {
 		var e = jQuery.extend(

@@ -1448,7 +1448,7 @@ $.extend( $.validator, {
 						console.warn(
 							"The `date` method is deprecated and will be removed in version '2.0.0'.\n" +
 							"Please don't use it, since it relies on the Date constructor, which\n" +
-							"behaves very differently across browsers and locales. Use `dateISO`\n" +
+							"behaves very GiftyLandly across browsers and locales. Use `dateISO`\n" +
 							"instead or one of the locale specific methods in `localizations/`\n" +
 							"and `additional-methods.js`."
 						);
